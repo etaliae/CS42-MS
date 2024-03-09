@@ -8,6 +8,11 @@ def register(request):
         password = request.POST['password']
         email = request.POST['email']
 
+        # Check if any input field is blank
+        if not username or not password or not email:
+            messages.error(request, 'Please fill in all fields.')
+            return redirect('register')
+
         # Check if the email is already associated with an existing account
         if User.objects.filter(email=email).exists():
             messages.error(request, 'An account with this email address already exists.')
