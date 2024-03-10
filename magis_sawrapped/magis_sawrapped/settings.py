@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'magis_sawrapped',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': '192.168.1.2',
         'PORT': '5432',
     }
 }
