@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'magis_sawrapped.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magis_sawrapped',
+        'NAME': 'magis-sawrapped',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': 'magis-sawrapped.cz00m2yyky56.ap-southeast-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
