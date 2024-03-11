@@ -1,48 +1,71 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .models import User
+from django.contrib import messages
+from django.contrib.auth.models import User
+
 
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
         email = request.POST['email']
 
+        messages.clear(request)
+
         # Check if any input field is blank
-        if not username or not password or not email:
+        if not username or not password or not confirm_password or not email:
             messages.error(request, 'Please fill in all fields.')
-            return redirect('register')
+            return render(request, 'register.html', {'error_code': 'blank_field'})
 
         # Check if the email is already associated with an existing account
-        if User.objects.filter(email=email).exists():
+        elif User.objects.filter(email=email).exists():
             messages.error(request, 'An account with this email address already exists.')
-            return redirect('register')
+            return render(request, 'register.html', {'error_code': 'existing_email'})
 
-        user = User.objects.create(username=username, password=password, email=email)
-        user.save()
+        # Check if passwords match
+        elif password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'register.html', {'error_code': 'password_mismatch'})
 
-        return redirect('login')
+        else:
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.save() 
+        
+
+        # Log in the user after registration
+        authenticated_user = authenticate(request, username=username, password=password)
+        login(request, authenticated_user)
+
+        # Redirect to the home page or any other desired page
+        return redirect('home')
 
     return render(request, 'register.html')
 
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        identifier = request.POST.get('identifier')  # Use a field named 'identifier' in your login form
         password = request.POST['password']
 
-        # Check if both username and password are provided
-        if not username or not password:
-            messages.error(request, 'Please provide both username and password.')
-            return redirect('login')
+        # Check if both identifier and password are provided
+        if not identifier or not password:
+            messages.error(request, 'Please provide both username/email and password.')
+            return render(request, 'login.html')
 
-        user = authenticate(request, username=username, password=password)
+        # Check if the identifier is an email address
+        if '@' in identifier:
+            kwargs = {'email': identifier}
+        else:
+            kwargs = {'username': identifier}
+
+        user = authenticate(request, password=password, **kwargs)
 
         # Check if authentication failed
         if user is None:
-            messages.error(request, 'Invalid username or password. Please try again.')
-            return redirect('login')
+            messages.error(request, 'No account found for the provided username/email and password.')
+            return render(request, 'login.html')
 
         login(request, user)
-        return redirect('home')
+        return render(request, 'home.html')  # Change this to the desired redirect after successful login
 
     return render(request, 'login.html')
