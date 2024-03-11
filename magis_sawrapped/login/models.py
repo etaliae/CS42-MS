@@ -1,9 +1,9 @@
 from django.db import models
 
 class User(models.Model):
-    username = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(primary_key=True, unique=True)
+    username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.username
+        return self.email
