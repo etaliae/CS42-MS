@@ -11,8 +11,6 @@ def register(request):
         confirm_password = request.POST['confirm_password']
         email = request.POST['email']
 
-        messages.clear(request)
-
         # Check if any input field is blank
         if not username or not password or not confirm_password or not email:
             messages.error(request, 'Please fill in all fields.')
@@ -31,20 +29,15 @@ def register(request):
         else:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.save() 
-        
-
-        # Log in the user after registration
-        authenticated_user = authenticate(request, username=username, password=password)
-        login(request, authenticated_user)
-
-        # Redirect to the home page or any other desired page
-        return redirect('home')
+            authenticated_user = authenticate(request, username=username, password=password)
+            login(request, authenticated_user)
+            return redirect('dashboard')
 
     return render(request, 'register.html')
 
 def user_login(request):
     if request.method == 'POST':
-        identifier = request.POST.get('identifier')  # Use a field named 'identifier' in your login form
+        identifier = request.POST.get('identifier')
         password = request.POST['password']
 
         # Check if both identifier and password are provided
@@ -65,7 +58,8 @@ def user_login(request):
             messages.error(request, 'No account found for the provided username/email and password.')
             return render(request, 'login.html')
 
-        login(request, user)
-        return render(request, 'home.html')  # Change this to the desired redirect after successful login
+        else:
+            login(request, user)
+            return render(request, 'dashboard.html') 
 
     return render(request, 'login.html')

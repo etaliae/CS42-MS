@@ -12,11 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-<<<<<<< HEAD
-=======
 from dotenv import load_dotenv
 load_dotenv()
->>>>>>> main
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'login'
+    'login',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
