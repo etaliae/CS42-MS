@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} My Grades {% endblock %}
+
+{% block header %}
+<h1>View Grades</h1>
+{% endblock %}
+
+{% block content %}
+
+<p><a href="{% url 'dashboard:grade-create' %}">Add New Grade</a></p>
+
+<table>
+
+    <tr>
+        <th>School Year</th>
+        <th>Sem</th>
+        <th>Subject Code</th>
+        <th>Course Title</th>
+        <th>Units</th>
+        <th>Final Grade</th>
+        <th>Options</th>
+    </tr>
+
+    {% for object in object_list %}
+    <tr>
+        <td>{{ object.semester.school_year }}</td>
+        <td>{{ object.semester.semester }}</td>
+        <td>{{ object.subject.subject_code }}</td>
+        <td>{{ object.subject.course_title }}</td>
+        <td>{{ object.subject.units }}</td>
+        <td>{{ object.grade }}</td>
+        <td>
+            <a href="{% url 'dashboard:grade-update' object.pk %}">Edit</a>
+            <a href="{% url 'dashboard:grade-delete' object.pk %}">Delete</a>
+        </td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
