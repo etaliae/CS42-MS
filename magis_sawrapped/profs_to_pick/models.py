@@ -1,7 +1,8 @@
 from django.db import models
 from schedo.models import Department, Subject
 
-class Professor(models.Model)
+
+class Professor(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     last_name = models.CharField(max_length=150)
     given_name = models.CharField(max_length=150)
@@ -17,13 +18,10 @@ class Professor(models.Model)
         return '{}, {} {}'.format(self.last_name, self.given_name, self.middle_initial)
 
 
-
-class Review(models.Model)
+class Review(models.Model):
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     review = models.TextField()
 
     def __str__(self):
         return '{}'.format(self.review)
-
-
