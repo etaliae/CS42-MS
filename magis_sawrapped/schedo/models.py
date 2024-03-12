@@ -1,13 +1,12 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from profs_to_pick.models import Professor
+# from profs_to_pick.models import Professor
 
 # class Department(models.Model):
 #     department_name = models.CharField(unique=True, max_length=150)
     
 #     def __str__(self):
 #         return self.department_name
-
 
 class Subject(models.Model): # Subject is equivalent to course
     subject_code = models.CharField(primary_key=True, max_length=20)
@@ -16,11 +15,11 @@ class Subject(models.Model): # Subject is equivalent to course
                                 validators=[MaxValueValidator(6),
                                             MinValueValidator(0)])
 
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['subject_code', 'course_title', 'units'],
-            name='subj_uniq')]
-        ordering = ['subject_code']
+    # class Meta:
+    #     constraints = [models.UniqueConstraint(
+    #         fields=['subject_code', 'course_title', 'units'],
+    #         name='subj_uniq')]
+    #     ordering = ['subject_code']
 
     def __str__(self):
         return '{}: {}'.format(self.subject_code, self.course_title)
@@ -37,18 +36,18 @@ class SchoolYear(models.Model):
                                 choices=SEMESTER_CHOICES,
                                 default='0')
 
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['school_year', 'semester'],
-            name='sy_and_sem_uniq')]
-        ordering = ['-school_year', '-semester']
+    # class Meta:
+    #     constraints = [models.UniqueConstraint(
+    #         fields=['school_year', 'semester'],
+    #         name='sy_and_sem_uniq')]
+    #     ordering = ['-school_year', '-semester']
 
     def __str__(self):
         return '{}-{}'.format(self.school_year, self.semester)
 
 
-class Semester(models.Model):
-    school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
+# class Semester(models.Model):
+#     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
     
 class Time(models.Model):
     time = models.CharField(max_length=9) # XXXX-XXXX
@@ -65,10 +64,10 @@ class Schedule(models.Model):
         Time,
         on_delete=models.CASCADE
     )
-    professor = models.ForeignKey(
-        Professor,
-        on_delete=models.CASCADE
-    )
+    # professor = models.ForeignKey(
+    #     Professor,
+    #     on_delete=models.CASCADE
+    # )
     section = models.CharField(max_length=10)
     max_no = models.IntegerField(
         default=1,
