@@ -2,11 +2,11 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from profs_to_pick.models import Professor
 
-# class Department(models.Model):
-#     department_name = models.CharField(unique=True, max_length=150)
+class Department(models.Model):
+    department_name = models.CharField(unique=True, max_length=150)
     
-#     def __str__(self):
-#         return self.department_name
+    def __str__(self):
+        return self.department_name
 
 class Subject(models.Model): # Subject is equivalent to course
     subject_code = models.CharField(primary_key=True, max_length=20)
@@ -24,6 +24,20 @@ class Subject(models.Model): # Subject is equivalent to course
     def __str__(self):
         return '{}: {}'.format(self.subject_code, self.course_title)
     
+class Professor(models.Model):
+    # department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    last_name = models.CharField(max_length=150)
+    given_name = models.CharField(max_length=150)
+    middle_initial = models.CharField(max_length=5, blank=True, default='')
+
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=['last_name', 'given_name', 'middle_initial'],
+            name='prof_uniq')]
+        ordering = ['last_name']
+
+    def __str__(self):
+        return '{}, {} {}'.format(self.last_name, self.given_name, self.middle_initial)
 
 class SchoolYear(models.Model):
     school_year = models.CharField(unique=True, max_length=150)
@@ -58,16 +72,19 @@ class Time(models.Model):
 class Schedule(models.Model):
     subject = models.ForeignKey(
         Subject,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        default=''
     )
     time = models.ForeignKey(
         Time,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        default=''
     )
-    # professor = models.ForeignKey(
-    #     Professor,
-    #     on_delete=models.CASCADE
-    # )
+    professor = models.ForeignKey(
+        Professor,
+        on_delete=models.CASCADE,
+        default=''
+    )
     section = models.CharField(max_length=10)
     max_no = models.IntegerField(
         default=1,
