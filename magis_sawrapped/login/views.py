@@ -18,7 +18,8 @@ def register(request):
 
         # Check if the email is already associated with an existing account
         elif User.objects.filter(email=email).exists():
-            messages.error(request, 'An account with this email address already exists.')
+            messages.error(
+                request, 'An account with this email address already exists.')
             return render(request, 'register.html', {'error_code': 'existing_email'})
 
         # Check if passwords match
@@ -27,13 +28,16 @@ def register(request):
             return render(request, 'register.html', {'error_code': 'password_mismatch'})
 
         else:
-            user = User.objects.create_user(username=username, password=password, email=email)
-            user.save() 
-            authenticated_user = authenticate(request, username=username, password=password)
+            user = User.objects.create_user(
+                username=username, password=password, email=email)
+            user.save()
+            authenticated_user = authenticate(
+                request, username=username, password=password)
             login(request, authenticated_user)
-            return redirect('dashboard')
+            return render(request, 'dashboard/add_grade.html')
 
     return render(request, 'register.html')
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -42,7 +46,8 @@ def user_login(request):
 
         # Check if both identifier and password are provided
         if not identifier or not password:
-            messages.error(request, 'Please provide both username/email and password.')
+            messages.error(
+                request, 'Please provide both username/email and password.')
             return render(request, 'login.html')
 
         # Check if the identifier is an email address
@@ -55,11 +60,12 @@ def user_login(request):
 
         # Check if authentication failed
         if user is None:
-            messages.error(request, 'No account found for the provided username/email and password.')
+            messages.error(
+                request, 'No account found for the provided username/email and password.')
             return render(request, 'login.html')
 
         else:
             login(request, user)
-            return render(request, 'dashboard.html') 
+            return redirect(request, 'dashboard.html')
 
     return render(request, 'login.html')
