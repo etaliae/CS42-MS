@@ -1,59 +1,13 @@
 from django.db import models
 from django.urls import reverse
-from django.core.validators import MaxValueValidator, MinValueValidator
-
-
-class Subject(models.Model):
-    subject_code = models.CharField(primary_key=True, max_length=20)
-    course_title = models.CharField(max_length=150)
-    units = models.IntegerField(default=0,
-                                validators=[MaxValueValidator(6),
-                                            MinValueValidator(0)])
-
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['subject_code', 'course_title', 'units'],
-            name='subj_uniq')]
-        ordering = ['subject_code']
-
-    def __str__(self):
-        return '{}: {}'.format(self.subject_code, self.course_title)
-
-
-class SchoolYear(models.Model):
-    school_year = models.CharField(unique=True, max_length=150)
-
-    def __str__(self):
-        return '{}'.format(self.school_year)
-
-    class Meta:
-        ordering = ['school_year']
-
-
-class Semester(models.Model):
-    school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
-    SEMESTER_CHOICES = (
-        ("0", "Intersession"),
-        ("1", "First Semester"),
-        ("2", "Second Semester"),
-    )
-    semester = models.CharField(max_length=20,
-                                choices=SEMESTER_CHOICES,
-                                default='0')
-
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['school_year', 'semester'],
-            name='sy_and_sem_uniq')]
-        ordering = ['-school_year', '-semester']
-
-    def __str__(self):
-        return '{}-{}'.format(self.school_year, self.semester)
+from schedo.models import SchoolYear, Subject
 
 
 class Grade(models.Model):
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    semester = models.ForeignKey(
+        SchoolYear, on_delete=models.CASCADE, default='')
+    subject = models.ForeignKey(
+        Subject, on_delete=models.CASCADE, default='')
     GRADE_CHOICES = (
         ("A", "A"),
         ("B+", "B+"),

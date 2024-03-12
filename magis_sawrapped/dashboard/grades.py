@@ -28,24 +28,22 @@ def get_grades():
     included_grades = Grade.objects.exclude(query)
 
     # Specifies the fields to be included in the dataframe
-    grades_data = included_grades.values('semester__school_year__school_year',
-                                         'semester__semester',
+    grades_data = included_grades.values('semester',
                                          'subject__subject_code',
                                          'subject__units',
                                          'grade')
 
     # Places the database into a dataframe and remanes each column
-    grades_df = pd.DataFrame(list(grades_data)).rename(columns={'semester__school_year__school_year': 'School Year',
-                                                                'semester__semester': 'Sem',
+    grades_df = pd.DataFrame(list(grades_data)).rename(columns={'semester': 'Semester',
                                                                 'subject__subject_code': 'Subject Code',
                                                                 'subject__units': 'Units',
                                                                 'grade': 'Final Grade'})
 
-    grades_df['Semester'] = grades_df['School Year'] + '-' + grades_df['Sem']
+    # grades_df['Semester'] = grades_df['School Year'] + '-' + grades_df['Sem']
 
-    final_gdf = grades_df[['Semester', 'Subject Code', 'Units', 'Final Grade']]
+    # final_gdf = grades_df[['Semester', 'Subject Code', 'Units', 'Final Grade']]
 
-    return final_gdf
+    return grades_df
 
 
 class Grades:
