@@ -15,17 +15,17 @@ class Subject(models.Model): # Subject is equivalent to course
                                 validators=[MaxValueValidator(6),
                                             MinValueValidator(0)])
 
-    # class Meta:
-    #     constraints = [models.UniqueConstraint(
-    #         fields=['subject_code', 'course_title', 'units'],
-    #         name='subj_uniq')]
-    #     ordering = ['subject_code']
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=['subject_code', 'course_title', 'units'],
+            name='subj_uniq')]
+        ordering = ['subject_code']
 
     def __str__(self):
         return '{}: {}'.format(self.subject_code, self.course_title)
     
 class Professor(models.Model):
-    # department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, default='')
     last_name = models.CharField(max_length=150)
     given_name = models.CharField(max_length=150)
     middle_initial = models.CharField(max_length=5, blank=True, default='')
@@ -50,11 +50,11 @@ class SchoolYear(models.Model):
                                 choices=SEMESTER_CHOICES,
                                 default='0')
 
-    # class Meta:
-    #     constraints = [models.UniqueConstraint(
-    #         fields=['school_year', 'semester'],
-    #         name='sy_and_sem_uniq')]
-    #     ordering = ['-school_year', '-semester']
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=['school_year', 'semester'],
+            name='sy_and_sem_uniq')]
+        ordering = ['-school_year', '-semester']
 
     def __str__(self):
         return '{}-{}'.format(self.school_year, self.semester)

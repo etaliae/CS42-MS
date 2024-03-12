@@ -15,7 +15,7 @@ class SubjectAdmin(admin.ModelAdmin):
 class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
 
-    list_display = ('last_name', 'given_name', 'middle_initial',)
+    list_display = ('department', 'last_name', 'given_name', 'middle_initial')
 
 class SchoolYearAdmin(admin.ModelAdmin):
     model = SchoolYear
