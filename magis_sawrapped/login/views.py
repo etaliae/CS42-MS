@@ -34,7 +34,11 @@ def register(request):
             authenticated_user = authenticate(
                 request, username=username, password=password)
             login(request, authenticated_user)
+<<<<<<< Updated upstream
             return render(request, 'dashboard/add_grade.html')
+=======
+            return render(request, 'view_grades.html') 
+>>>>>>> Stashed changes
 
     return render(request, 'register.html')
 
