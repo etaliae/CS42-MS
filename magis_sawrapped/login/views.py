@@ -14,34 +14,26 @@ def register(request):
         # Check if any input field is blank
         if not username or not password or not confirm_password or not email:
             messages.error(request, 'Please fill in all fields.')
-            return render(request, 'register.html', {'error_code': 'blank_field'})
+            return render(request, 'register.html')
 
         # Check if the email is already associated with an existing account
         elif User.objects.filter(email=email).exists():
-            messages.error(
-                request, 'An account with this email address already exists.')
-            return render(request, 'register.html', {'error_code': 'existing_email'})
+            messages.error(request, 'An account with this email address already exists.')
+            return render(request, 'register.html')
 
         # Check if passwords match
         elif password != confirm_password:
             messages.error(request, 'Passwords do not match.')
-            return render(request, 'register.html', {'error_code': 'password_mismatch'})
+            return render(request, 'register.html')
 
         else:
-            user = User.objects.create_user(
-                username=username, password=password, email=email)
-            user.save()
-            authenticated_user = authenticate(
-                request, username=username, password=password)
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.save() 
+            authenticated_user = authenticate(request, username=username, password=password)
             login(request, authenticated_user)
-<<<<<<< Updated upstream
-            return render(request, 'dashboard/add_grade.html')
-=======
-            return render(request, 'view_grades.html') 
->>>>>>> Stashed changes
+            return render(request, '../../dashboard/templates/dashboard/view_grades.html') 
 
     return render(request, 'register.html')
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -50,8 +42,7 @@ def user_login(request):
 
         # Check if both identifier and password are provided
         if not identifier or not password:
-            messages.error(
-                request, 'Please provide both username/email and password.')
+            messages.error(request, 'Please provide both username/email and password.')
             return render(request, 'login.html')
 
         # Check if the identifier is an email address
@@ -64,12 +55,11 @@ def user_login(request):
 
         # Check if authentication failed
         if user is None:
-            messages.error(
-                request, 'No account found for the provided username/email and password.')
+            messages.error(request, 'No account found for the provided username/email and password.')
             return render(request, 'login.html')
 
         else:
             login(request, user)
-            return redirect(request, 'dashboard.html')
+            return render(request, '../../dashboard/templates/dashboard/view_grades.html') 
 
     return render(request, 'login.html')
