@@ -9,6 +9,7 @@ class Department(models.Model):
         return self.department_name
 
 class Subject(models.Model): # Subject is equivalent to course
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, default='')
     subject_code = models.CharField(primary_key=True, max_length=20)
     course_title = models.CharField(max_length=150)
     units = models.IntegerField(default=0,
@@ -19,7 +20,7 @@ class Subject(models.Model): # Subject is equivalent to course
         constraints = [models.UniqueConstraint(
             fields=['subject_code', 'course_title', 'units'],
             name='subj_uniq')]
-        ordering = ['subject_code']
+        ordering = ['department', 'subject_code']
 
     def __str__(self):
         return '{}: {}'.format(self.subject_code, self.course_title)
@@ -40,7 +41,7 @@ class Professor(models.Model):
         return '{}, {} {}'.format(self.last_name, self.given_name, self.middle_initial)
 
 class SchoolYear(models.Model):
-    school_year = models.CharField(unique=True, max_length=150)
+    school_year = models.CharField(max_length=150)
     SEMESTER_CHOICES = (
         ("0", "Intersession"),
         ("1", "First Semester"),
