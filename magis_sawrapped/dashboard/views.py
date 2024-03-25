@@ -15,10 +15,18 @@ def dashboard(request):
     latest_qpi = grades.latest_qpi()
     dean_list = grades.dean_list()
 
-    return render(request, 'dashboard/dashboard.html', {'df': df,
-                                                        'cumulative_qpi': cumulative_qpi,
-                                                        'latest_qpi': latest_qpi,
-                                                        'dean_list': dean_list})
+    qpi_by_semester = grades.qpi_by_semester()
+    semester = qpi_by_semester['Semester'].tolist()
+    qpi = qpi_by_semester['QPI'].tolist()
+
+    context = {'df': df,
+               'cumulative_qpi': cumulative_qpi,
+               'latest_qpi': latest_qpi,
+               'dean_list': dean_list,
+               'semester': semester,
+               'qpi': qpi}
+
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 class GradeListView(ListView):
