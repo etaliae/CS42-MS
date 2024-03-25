@@ -1,11 +1,37 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
 from .models import Department, Subject, Professor, SchoolYear, Time, Schedule
+
+import string
+# Register your models here.
+
+class FirstLetterFilter(admin.SimpleListFilter):
+    # This class was copied from
+    # https://stackoverflow.com/questions/33322645/custom-admin-page-list-filter-by-first-letter
+    title = 'First Letter'
+
+    parameter_name = 'letter'
+    letters = list(string.ascii_uppercase)
+
+    def lookups(self, request, model_admin):
+        qs = model_admin.get_queryset(request)
+        lookups = []
+        for letter in self.letters:
+            count = qs.filter(department_name__istartswith=letter).count()
+            if count:
+                lookups.append((letter, '{} ({})'.format(letter, count)))
+        return lookups
+
+    def queryset(self, request, queryset):
+        filter_val = self.value()
+        if filter_val in self.letters:
+            return queryset.filter(department_name__istartswith=self.value())
 
 class DepartmentAdmin(admin.ModelAdmin):
     model = Department
+
+    search_fields = ('department_name',)
+
+    list_filter = (FirstLetterFilter,)
 
 class SubjectAdmin(admin.ModelAdmin):
     model = Subject
