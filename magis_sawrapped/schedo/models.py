@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from profs_to_pick.models import Professor
 
@@ -71,10 +72,14 @@ class SchoolYear(models.Model):
 #     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
 
 class Time(models.Model):
-    time = models.CharField(max_length=9)  # XXXX-XXXX
-    day = models.CharField(max_length=10)
-    room = models.CharField(max_length=20)
-    modality = models.CharField(max_length=20)
+    start_time = models.TimeField(max_length=9, default='00:00:00') # XXXX-XXXX
+    end_time = models.TimeField(max_length=9, default='00:00:00')
+    day = models.CharField(max_length=10, default='')
+    room = models.CharField(max_length=20, default='')
+    modality = models.CharField(max_length=20, default='onsite')
+
+    def __str__(self):
+        return '{} {}-{}'.format(self.day, self.start_time, self.end_time)
 
 
 class Schedule(models.Model):
@@ -107,3 +112,19 @@ class Schedule(models.Model):
     remarks = models.CharField(max_length=200)
     s = models.CharField(max_length=1)
     p = models.CharField(max_length=1)
+    
+class UserTable(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=50)
+    time_created = models.DateField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return '{}: {}'.format(self.user, self.name)
+
+# Contains a list of Schedules
+class UserSchedule(models.Model):
+    table = models.ForeignKey(UserTable, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}: {}'.format(self.table, self.schedule)
