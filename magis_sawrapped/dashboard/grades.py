@@ -28,25 +28,27 @@ def get_grades():
     included_grades = Grade.objects.exclude(query)
 
     # Specifies the fields to be included in the dataframe
-    grades_data = included_grades.values('semester',
+    grades_data = included_grades.values('semester__school_year',
+                                         'semester__semester',
                                          'subject__subject_code',
                                          'subject__units',
                                          'grade')
 
     # Places the database into a dataframe and remanes each column
-    grades_df = pd.DataFrame(list(grades_data)).rename(columns={'semester': 'Semester',
+    grades_df = pd.DataFrame(list(grades_data)).rename(columns={'semester__school_year': 'School Year',
+                                                                'semester__semester': 'Sem',
                                                                 'subject__subject_code': 'Subject Code',
                                                                 'subject__units': 'Units',
                                                                 'grade': 'Final Grade'})
 
-    # grades_df['Semester'] = grades_df['School Year'] + '-' + grades_df['Sem']
+    grades_df['Semester'] = grades_df['School Year'] + '-' + grades_df['Sem']
 
-    # final_gdf = grades_df[['Semester', 'Subject Code', 'Units', 'Final Grade']]
+    final_gdf = grades_df[['Semester', 'Subject Code', 'Units', 'Final Grade']]
 
-    return grades_df
+    return final_gdf
 
 
-class Grades:
+class Grades:  # Change later to enable other features
     def __init__(self):
         # Table of included grades in QPI computations
         self.df = get_grades()
@@ -96,8 +98,20 @@ class Grades:
         second_honor = 3.35
         first_honor = 3.7
         if self.latest_qpi() < second_honor:
-            return False
+            return ' '
         if second_honor <= self.latest_qpi() < first_honor:
             return 'Second Honors'
         else:
             return 'First Honors'
+
+    def qpi_by_semester(self):
+        semesters = self.df['Semester'].unique()
+        qpi_lst = []
+        for s in semesters:
+            qpi_lst.append(self.semester_qpi(s))
+        new_df = pd.DataFrame(data={'Semester': semesters, 'QPI': qpi_lst})
+        return new_df
+    
+    def letter_frequency(self):
+        df = self.df
+        return df.groupby('Final Grade')['Subject Code'].count().reset_index()
