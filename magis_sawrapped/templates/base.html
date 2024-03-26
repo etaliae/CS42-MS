@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+    <script src="{% static 'htmx.min.js' %}" defer></script>
     {% block headImports %}{% endblock %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>{% block title %}{% endblock %}</title>
@@ -12,8 +13,8 @@
     <div id="header">
         {% block header %}{% endblock %}
     </div>
-    <div id="content">
-        {% block content %}{% endblock %}
+    <div id="main">
+        {% block main %}{% endblock %}
     </div>
     <div id="footer">
         {% block footer %}{% endblock %}
