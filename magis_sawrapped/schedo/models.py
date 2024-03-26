@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from profs_to_pick.models import Professor
 
@@ -9,6 +10,7 @@ class Department(models.Model):
         return self.department_name
 
 class Subject(models.Model): # Subject is equivalent to course
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, default='')
     subject_code = models.CharField(primary_key=True, max_length=20)
     course_title = models.CharField(max_length=150)
     units = models.IntegerField(default=0,
@@ -19,7 +21,7 @@ class Subject(models.Model): # Subject is equivalent to course
         constraints = [models.UniqueConstraint(
             fields=['subject_code', 'course_title', 'units'],
             name='subj_uniq')]
-        ordering = ['subject_code']
+        ordering = ['department', 'subject_code']
 
     def __str__(self):
         return '{}: {}'.format(self.subject_code, self.course_title)
@@ -40,7 +42,7 @@ class Professor(models.Model):
         return '{}, {} {}'.format(self.last_name, self.given_name, self.middle_initial)
 
 class SchoolYear(models.Model):
-    school_year = models.CharField(unique=True, max_length=150)
+    school_year = models.CharField(max_length=150)
     SEMESTER_CHOICES = (
         ("0", "Intersession"),
         ("1", "First Semester"),
@@ -64,10 +66,14 @@ class SchoolYear(models.Model):
 #     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
     
 class Time(models.Model):
-    time = models.CharField(max_length=9) # XXXX-XXXX
-    day = models.CharField(max_length=10)
-    room = models.CharField(max_length=20)
-    modality = models.CharField(max_length=20)
+    start_time = models.TimeField(max_length=9, default='00:00:00') # XXXX-XXXX
+    end_time = models.TimeField(max_length=9, default='00:00:00')
+    day = models.CharField(max_length=10, default='')
+    room = models.CharField(max_length=20, default='')
+    modality = models.CharField(max_length=20, default='onsite')
+
+    def __str__(self):
+        return '{} {}-{}'.format(self.day, self.start_time, self.end_time)
 
 class Schedule(models.Model):
     subject = models.ForeignKey(
@@ -99,3 +105,23 @@ class Schedule(models.Model):
     remarks = models.CharField(max_length=200)
     s = models.CharField(max_length=1)
     p = models.CharField(max_length=1)
+
+    def __str__(self):
+        return '{}-{}'.format(self.subject.subject_code, self.section)
+
+# Contains the tables that are only accessible to the user with the matching credentials
+class UserTable(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=50)
+    time_created = models.DateField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return '{}: {}'.format(self.user, self.name)
+
+# Contains a list of Schedules
+class UserSchedule(models.Model):
+    table = models.ForeignKey(UserTable, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}: {}'.format(self.table, self.schedule)

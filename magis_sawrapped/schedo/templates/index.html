@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Head section #}
+{% block headImports %}
+    <script src="{% static 'htmx.min.js' %}" defer></script>
+{% endblock %}
+{% block title %}
+    ScheDo
+{% endblock %}
+
+{% block content %}
+<h1> testing da dropdown </h1>
+<label>Table: </label>
+<select id="userTable">
+    {% for t in table %}
+    <option value="{{ t }}">{{ t }}</option>
+    {% endfor %}
+</select>
+{% endblock %}
