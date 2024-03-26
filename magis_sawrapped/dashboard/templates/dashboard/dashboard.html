@@ -3,9 +3,15 @@
 
 {% block title %}Dashboard{% endblock %}
 
-{% block header %}<h1>Welcome, User!</h1>{% endblock %}
+{% block header %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}
 
 {% block content %}
+
+<h1>Welcome, User!</h1>
 
 <div class="grades-table">
     <table>
@@ -49,5 +55,66 @@
 {% for q in qpi %}
 {{ q }}
 {% endfor %}
+
+
+<h2>QPI by Semester</h2>
+
+<canvas id="qpiBySem" width="200" height="50">
+</canvas>
+
+<script>
+    let semester = JSON.parse('{{ semester|safe }}');
+    let qpi = JSON.parse('{{ qpi|safe }}');
+
+    // Creating line chart
+    let a = document.getElementById('qpiBySem').getContext('2d');
+    let qpiBySem = new Chart(a, {
+        type: 'line',
+        data: {
+            labels: semester,
+            datasets: [
+                {
+                    label: 'QPI',
+                    data: qpi,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                },
+            ]
+        },
+    });
+</script>
+
+<h2>Cumulative Letter Grade Frequency</h2>
+
+<canvas id="letterFreq" width="200" height="50">
+</canvas>
+
+<script>
+    let final_grade = JSON.parse('{{ final_grade|safe }}');
+    let subject_code = JSON.parse('{{ subject_code|safe }}');
+
+    // Creating line chart
+    let b = document.getElementById('letterFreq').getContext('2d');
+    let letterFreq = new Chart(b, {
+        type: 'doughnut',
+        data: {
+            labels: final_grade,
+            datasets: [
+                {
+                    label: 'Subject Code',
+                    data: subject_code,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                },
+            ]
+        },
+    });
+</script>
+
 
 {% endblock %}

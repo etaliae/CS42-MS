@@ -98,7 +98,7 @@ class Grades:  # Change later to enable other features
         second_honor = 3.35
         first_honor = 3.7
         if self.latest_qpi() < second_honor:
-            return False
+            return ' '
         if second_honor <= self.latest_qpi() < first_honor:
             return 'Second Honors'
         else:
@@ -111,3 +111,7 @@ class Grades:  # Change later to enable other features
             qpi_lst.append(self.semester_qpi(s))
         new_df = pd.DataFrame(data={'Semester': semesters, 'QPI': qpi_lst})
         return new_df
+    
+    def letter_frequency(self):
+        df = self.df
+        return df.groupby('Final Grade')['Subject Code'].count().reset_index()
