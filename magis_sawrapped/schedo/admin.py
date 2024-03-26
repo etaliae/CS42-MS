@@ -26,6 +26,17 @@ class FirstLetterFilter(admin.SimpleListFilter):
         if filter_val in self.letters:
             return queryset.filter(department_name__istartswith=self.value())
 
+class SubjectAdmin(admin.ModelAdmin):
+    model = Subject
+
+    list_display = ('department', 'subject_code', 'course_title', 'units')
+    search_fields = ('department_name',)
+
+    list_filter = ('department', 'units')
+
+class SubjectInline(admin.TabularInline):
+    model = Subject
+
 class DepartmentAdmin(admin.ModelAdmin):
     model = Department
 
@@ -33,10 +44,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 
     list_filter = (FirstLetterFilter,)
 
-class SubjectAdmin(admin.ModelAdmin):
-    model = Subject
-
-    list_display = ('subject_code', 'course_title', 'units')
+    inlines = [SubjectInline,]
 
 class ProfessorAdmin(admin.ModelAdmin):
     model = Professor

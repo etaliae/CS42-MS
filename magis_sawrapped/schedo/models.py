@@ -70,6 +70,9 @@ class Time(models.Model):
     room = models.CharField(max_length=20)
     modality = models.CharField(max_length=20)
 
+    def __str__(self):
+        return '{}-{}'.format(self.school_year, self.semester)
+
 class Schedule(models.Model):
     subject = models.ForeignKey(
         Subject,
@@ -100,3 +103,6 @@ class Schedule(models.Model):
     remarks = models.CharField(max_length=200)
     s = models.CharField(max_length=1)
     p = models.CharField(max_length=1)
+
+    def __str__(self):
+        return '{}-{}'.format(self.subject.subject_code, self.section)
