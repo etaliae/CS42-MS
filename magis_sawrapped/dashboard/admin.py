@@ -1,3 +1,11 @@
 from django.contrib import admin
+from .models import Grade
 
-# Register your models here.
+
+class GradeAdmin(admin.ModelAdmin):
+    model = Grade
+
+    list_display = ('semester', 'subject', 'grade',)
+
+
+admin.site.register(Grade, GradeAdmin)
