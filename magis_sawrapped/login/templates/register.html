@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
     <h2>Register</h2>
     
     {% if messages %}
@@ -31,5 +32,4 @@
 
         <input type="submit" value="Register">
     </form>
-</body>
-</html>
+{%endblock%}
