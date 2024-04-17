@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 
-def register(request):
+def user_register(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -51,7 +51,7 @@ def user_login(request):
         else:
             kwargs = {'username': identifier}
 
-        user = authenticate(request, password=password, **kwargs)
+        user = authenticate(request, **kwargs, password=password)
 
         # Check if authentication failed
         if user is None:
