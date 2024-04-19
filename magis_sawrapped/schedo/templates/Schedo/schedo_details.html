@@ -1,14 +1,15 @@
 {% extends 'schedo.html' %}
 {% load static %}
 
-{% block title %} {{object.name}} {% endblock %}
+{% block title %} {{thisTable.name}} {% endblock %}
 
 {% block content %}
-    <h2>{{object.name}}</h2>
+    <h2>{{thisTable.name}}</h2>
 
     <div>
         Here are your schedules
-        {% for schedule in UserSchedules %}
+        <hr/>
+        {% for schedule in userSchedules %}
             <p>
                 {{schedule}}
             </p>

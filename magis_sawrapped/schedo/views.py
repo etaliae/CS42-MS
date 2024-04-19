@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.views.generic.detail import DetailView
+from django.shortcuts import get_object_or_404
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
+
 
 from django_tables2 import SingleTableMixin
 from django_filters.views import FilterView
@@ -15,11 +17,17 @@ def index(request):
     context['UserTables'] = UserTable.objects.all()
     return render(request, 'product_table_htmx.html', context)
 
-class UserTableDetailView(DetailView):
-    context = {}
-    model = UserTable
-    context['UserSchedules'] = UserSchedule.objects.all()
+class UserTableDetailView(TemplateView):
     template_name = "Schedo/schedo_details.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        thisTable = get_object_or_404(UserTable, pk=self.kwargs['pk']) # Get current table instance
+        
+        context['thisTable'] = thisTable
+          # Filter on userTable name column
+        context['userSchedules'] = UserSchedule.objects.filter(table__name = thisTable.name)
+        return context
 
 class UserTableCreateView(CreateView):
     
