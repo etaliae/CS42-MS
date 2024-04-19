@@ -1,120 +1,254 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}
+    Dashboard
+{% endblock %}
 
-{% block header %}
+{% block headImports %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 {% endblock %}
 
 {% block content %}
+<body style = 
+    "background: linear-gradient(180deg,  #172554 0%, #1E40AF 100%);
+    color: #FFF;
+    font-family: Inter;
+    ">
+<div class = "container vh-100">
+    <div class = "row" style = "gap: 1%; height: 95%;">
+        <div class = "col-7" style = "
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;">
+            <div class="row">
+                <div class="col"
+                style = "
+                display: flex;
+                padding: 30px 32px;
+                justify-content: space-between;
+                align-items: flex-end;
+                border-radius: 45px;
+                border: 2px solid #EFF6FF;
+                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                backdrop-filter: blur(36.45000076293945px);">
+                    <h1 style = "color: #fff;
+                    font-size: 72px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 90px;
+                    letter-spacing: -1.44px;">
+                        Welcome, <br> <b>{{ user.username }}!</b>
+                    </h1>
+                    <img src="{% static 'Clipboard.png' %}" style = "width: 133px;
+                    height: 165px;">
+                </div>
+            </div>
+            <div class = "row" >
+                <div class = "col-6"
+                    style = "
+                    display: flex;
+                    padding: 26px 26px;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    border-radius: 45px;
+                    border: 6px solid #121471;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                    backdrop-filter: blur(36.45000076293945px);">
+                    <img src = "{% static 'Calendar.png' %}" style = "width: 120px;">
+                    <a href ="{% url 'schedo:index' %}"
+                    style = "
+                    color: #FFF;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-size: 44px;
+                    font-style: normal;
+                    font-weight: 700;
+                    text-decoration: none;
+                    line-height: normal;">Schedo</a>
+                </div>
+                <div class = "col-6"
+                    style = "
+                    display: flex;
+                    padding: 26px 26px;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    border-radius: 45px;
+                    border: 6px solid #121471;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                    backdrop-filter: blur(36.45000076293945px);">
+                    <img src = "{% static 'VizProf.png' %}" style = "width: 120px; height: 120px;">
+                    <a href = "#" 
+                    style = "
+                    color: #FFF;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-size: 44px;
+                    font-style: normal;
+                    font-weight: 700;
+                    text-decoration: none;
+                    line-height: normal;">
+                        VizProf
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class = "col-4"
+        style = "display: flex;
+            width: 497px;
+            height: 600px;
+            gap: 2%;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;">
+            <div class ="row" style = "gap: 2%;">
+                <div class = "col" style = "
+                    padding: 30px 32px;
+                    border-radius: 45px;
+                    border: 2px solid #EFF6FF;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                    backdrop-filter: blur(36.45000076293945px);">
+                    <div class="dean-list">
+                        <h3>Dean's Lister Award</h3>
+                        <p>{{ dean_list }}</p>
+                    </div>
+                    
+                    {% for s in semester %}
+                    {{ s }}
+                    {% endfor %}
+                    
+                    {% for q in qpi %}
+                    {{ q }}
+                    {% endfor %}
+                    
+                </div>
+                <div class = "col" style = "gap: 2%;">
+                    <div class = "row"
+                        style = "
+                        padding: 30px 32px;
+                        border-radius: 45px;
+                        border: 2px solid #EFF6FF;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);">
+                        <div class="cumulative-qpi">
+                            <h3>Cumulative QPI</h3>
+                            <p>{{ cumulative_qpi }}</p>
+                        </div>
+                    </div>
+                    <div class = "row"
+                        style = "
+                        margin-top: 2%;
+                        padding: 30px 30px;
+                        border-radius: 45px;
+                        border: 2px solid #EFF6FF;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);">
+                        <!-- <div class="latest-qpi">
+                            <h3>Latest Semestral QPI</h3>
+                            <p>{{ latest_qpi }}</p>
+                        </div> -->
+                        <h4>QPI by Semester</h4>
 
-<h1>Welcome, User!</h1>
+                        <canvas id="qpiBySem">
+                        </canvas>
 
-<div class="grades-table">
-    <table>
+                        <script>
+                            let semester = JSON.parse('{{ semester|safe }}');
+                            let qpi = JSON.parse('{{ qpi|safe }}');
 
-        <tr>
-            {% for column in df.columns %}
-            <th>{{ column }}</th>
-            {% endfor %}
-        </tr>
+                            // Creating line chart
+                            let a = document.getElementById('qpiBySem').getContext('2d');
+                            let qpiBySem = new Chart(a, {
+                                type: 'line',
+                                data: {
+                                    labels: semester,
+                                    datasets: [
+                                        {
+                                            label: 'QPI',
+                                            data: qpi,
+                                            fill: false,
+                                            borderColor: 'rgb(75, 192, 192)',
+                                            tension: 0.1
+                                        },
+                                    ]
+                                },
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class = "row" style = "align-self: stretch;">
+                <!-- <div class="grades-table table" style = "
+                    padding: 31px 36px;
+                    border-radius: 45px;
+                    border: 2px solid #EFF6FF;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                    backdrop-filter: blur(36.45000076293945px);
+                    align-self: stretch;">
+                    <table>
+                
+                        <tr>
+                            {% for column in df.columns %}
+                            <th>{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                
+                        {% for row in df.values %}
+                        <tr>
+                            {% for value in row %}
+                            <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                
+                    </table> -->
+                    <div style = "
+                        display:flex;
+                        flex-direction: row;
+                        padding: 30px 32px;
+                        border-radius: 45px;
+                        border: 2px solid #EFF6FF;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);
+                        align-self: stretch;">
 
-        {% for row in df.values %}
-        <tr>
-            {% for value in row %}
-            <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
+                        <h3 style = "align-self: center;">Cumulative Letter Grade Frequency</h3>
+                        <div style = "width:fit-content; height: fit-content;">
+                        
+                        <canvas id="letterFreq">
+                        </canvas>
 
-    </table>
+                        <script>
+                            let final_grade = JSON.parse('{{ final_grade|safe }}');
+                            let subject_code = JSON.parse('{{ subject_code|safe }}');
+
+                            // Creating line chart
+                            let b = document.getElementById('letterFreq').getContext('2d');
+                            let letterFreq = new Chart(b, {
+                                type: 'doughnut',
+                                data: {
+                                    labels: final_grade,
+                                    datasets: [
+                                        {
+                                            label: 'Subject Code',
+                                            data: subject_code,
+                                            backgroundColor: [
+                                                'rgb(255, 99, 132)',
+                                                'rgb(54, 162, 235)',
+                                                'rgb(255, 205, 86)'
+                                            ],
+                                            hoverOffset: 4
+                                        },
+                                    ]
+                                },
+                            });
+                        </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="cumulative-qpi">
-    <h2>Cumulative QPI</h2>
-    <p>{{ cumulative_qpi }}</p>
-</div>
-
-<div class="latest-qpi">
-    <h2>Latest Semestral QPI</h2>
-    <p>{{ latest_qpi }}</p>
-</div>
-
-<div class="dean-list">
-    <h2>Dean's Lister Award</h2>
-    <p>{{ dean_list }}</p>
-</div>
-
-{% for s in semester %}
-{{ s }}
-{% endfor %}
-
-{% for q in qpi %}
-{{ q }}
-{% endfor %}
-
-
-<h2>QPI by Semester</h2>
-
-<canvas id="qpiBySem" width="200" height="50">
-</canvas>
-
-<script>
-    let semester = JSON.parse('{{ semester|safe }}');
-    let qpi = JSON.parse('{{ qpi|safe }}');
-
-    // Creating line chart
-    let a = document.getElementById('qpiBySem').getContext('2d');
-    let qpiBySem = new Chart(a, {
-        type: 'line',
-        data: {
-            labels: semester,
-            datasets: [
-                {
-                    label: 'QPI',
-                    data: qpi,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                },
-            ]
-        },
-    });
-</script>
-
-<h2>Cumulative Letter Grade Frequency</h2>
-
-<canvas id="letterFreq" width="200" height="50">
-</canvas>
-
-<script>
-    let final_grade = JSON.parse('{{ final_grade|safe }}');
-    let subject_code = JSON.parse('{{ subject_code|safe }}');
-
-    // Creating line chart
-    let b = document.getElementById('letterFreq').getContext('2d');
-    let letterFreq = new Chart(b, {
-        type: 'doughnut',
-        data: {
-            labels: final_grade,
-            datasets: [
-                {
-                    label: 'Subject Code',
-                    data: subject_code,
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    hoverOffset: 4
-                },
-            ]
-        },
-    });
-</script>
-
-
+</body>
 {% endblock %}

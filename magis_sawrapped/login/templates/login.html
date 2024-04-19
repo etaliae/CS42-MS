@@ -1,31 +1,136 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     Login
 {% endblock %}
 
 {% block content %}
-<body>
-    <h2>Login</h2>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <label for="identifier">Username/Email:</label>
-        <input type="text" name="identifier" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-        <br>
-        <input type="submit" value="Login">
-    </form>
-    <form method="get" action="{% url 'register' %}">
-        <button type="submit">Register</button>
-    </form>
+<body style = "
+    background-image: url('{% static 'Landing.png' %}');
+    height: 100vh;
+    font-family: Inter; ">
+
+    <div class = "container d-flex flex-column align-items-center justify-content-center vh-100 inter">
+        <div class = "card"
+            style = "
+            display: flex;
+            padding: 40px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            width: 40%">
+
+            <h2 class = "card-title"
+                style = "
+                color: #1E3A8A;
+                text-align: center;
+                font-weight: 700;
+                font-size: 28px;
+                align-self: stretch;">
+                    Sign in to your account
+            </h2>
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form method="post" action="{% url 'login' %}"
+                style = "
+                display: flex;
+                padding-top: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                align-self: stretch;
+                ">
+                {% csrf_token %}
+                <div style = "
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                        align-self: stretch;">
+                    <label 
+                        for="identifier"
+                        style = "
+                        color: #425466;
+                        font-size: 14px;
+                        font-weight: 500;">
+                            Username or Email:
+                    </label>
+                    <input type="text" name="identifier" required
+                        style = "padding: 14px 14px 16px 16px;
+                        align-self: stretch;
+                        border-radius: 6px;
+                        background: #FFF;
+                        box-shadow: 0px 1px 2px 0px rgba(50, 50, 71, 0.08), 0px 0px 1px 0px rgba(50, 50, 71, 0.20);
+                    ">
+                </div>
+                <br>
+                <div style = "
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    align-self: stretch;">
+                    <label for="password"
+                        style = "
+                        color: #425466;
+                        font-size: 14px;
+                        font-weight: 500;">
+                        Password:
+                    </label>
+                    <input type="password" name="password" required
+                        style = "
+                            padding: 14px 14px 16px 16px;
+                            align-self: stretch;
+                            border-radius: 6px;
+                            background: #FFF;
+                            box-shadow: 0px 1px 2px 0px rgba(50, 50, 71, 0.08), 0px 0px 1px 0px rgba(50, 50, 71, 0.20);
+                        ">
+                
+                <input type="submit" value="Login" 
+                style = "
+                    padding: 16px 24px;
+                    align-self: stretch;
+                    border-color: #FFF;
+                    color: #FFF;
+                    font-weight: 500;
+                    border-radius: 8px;
+                    background: #EAB308;">
+                </form>
+            </div>
+                <div style = "
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    align-self: stretch;">
+                    <p class = "text-muted"
+                        style = "
+                        margin: 0;
+                        font-size: 12px;
+                        font-weight: 500;
+                        align-self: center;">
+                        Don't have an account yet?
+                    </p>
+                    <form method="get" action="{% url 'register' %}"
+                    style = "display: flex; align-self: stretch;">
+                        <button class = "w-100" type="submit"
+                            style = "
+                            padding: 16px 24px;
+                            border-radius: 8px;
+                            color: #EAB308;
+                            border: 3px solid #EAB308;
+                            background: #F7FAFC;">
+                            Register
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 {%endblock%}
