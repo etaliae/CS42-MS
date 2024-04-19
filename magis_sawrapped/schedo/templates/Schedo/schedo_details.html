@@ -1,0 +1,28 @@
+{% extends 'schedo.html' %}
+{% load static %}
+
+{% block title %} {{object.name}} {% endblock %}
+
+{% block content %}
+    <h2>{{object.name}}</h2>
+
+    <div>
+        Here are your schedules
+        {% for schedule in UserSchedules %}
+            <p>
+                {{schedule}}
+            </p>
+            <hr/>
+        {% endfor %}
+    </div>
+
+    <div>
+        <a href="../edit/">
+            <button>Edit Schedule</button>
+        </a>
+    </div>
+
+    <div>
+        <a href="../../">Back to List of Schedule Tables</a>
+    </div>
+{% endblock %}
