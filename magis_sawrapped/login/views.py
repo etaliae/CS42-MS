@@ -60,6 +60,6 @@ def user_login(request):
 
         else:
             login(request, user)
-            return render(request, '../../dashboard/templates/dashboard/view_grades.html') 
+            return render(request, '../../dashboard/templates/dashboard/dashboard.html') 
 
     return render(request, 'login.html')
