@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Grade in {{ object.subject.subject_code }}{% endblock %}
+
+{% block header %} <h1> Delete Grade </h1> {% endblock %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete your grade in <strong>{{ object.subject.subject_code }}</strong>?</p>
+    <input type="submit" value="Confirm">
+</form>
+<a href="{% url 'dashboard:grades-list' %}"><button>Cancel</button></a>
+
+{% endblock %}

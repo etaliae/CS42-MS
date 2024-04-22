@@ -1,7 +1,9 @@
 from django.urls import path
 
-from .views import index
+from .views import UScheduleHTMxTableView
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', UScheduleHTMxTableView.as_view(), name='index'),
 ]
+
+app_name = "schedo"

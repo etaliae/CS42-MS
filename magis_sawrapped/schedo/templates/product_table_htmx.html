@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load render_table from django_tables2 %}
+{% load i18n %}
+
+
+{% block content %}
+    <h1>Select a schedule.</h1>
+    <label>Table: </label>
+    <select id="userTable">
+        {% for t in object_list %}
+        <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+    </select>
+    {# The actual table #}
+    {% render_table table %}
+{% endblock %}
