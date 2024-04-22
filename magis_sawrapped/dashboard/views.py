@@ -8,6 +8,7 @@ from .grades import get_grades, Grades
 
 import json
 
+
 def dashboard(request):
     grades = Grades()
 
@@ -24,6 +25,15 @@ def dashboard(request):
     final_grade = json.dumps(letter_frequency['Final Grade'].tolist())
     subject_code = json.dumps(letter_frequency['Subject Code'].tolist())
 
+    remaining_units = 0
+    if request.method == 'POST':
+        remaining_units = int(request.POST['remaining_units'])
+        print(f"Remaining units from request: {remaining_units}")
+
+    completed_units = grades.completed_units()
+    total = completed_units + remaining_units
+    ips_progress = round(grades.completed_units() * 100 / total, 2).tolist()
+
     context = {'df': df,
                'cumulative_qpi': cumulative_qpi,
                'latest_qpi': latest_qpi,
@@ -31,7 +41,12 @@ def dashboard(request):
                'semester': semester,
                'qpi': qpi,
                'final_grade': final_grade,
-               'subject_code': subject_code}
+               'subject_code': subject_code,
+               'remaining_units': remaining_units,
+               'completed_units': completed_units,
+               'ips_progress': ips_progress}
+
+    print(context)
 
     return render(request, 'dashboard/dashboard.html', context)
 

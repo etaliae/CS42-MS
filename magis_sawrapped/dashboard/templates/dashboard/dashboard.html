@@ -6,14 +6,19 @@
 {% block header %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
 
+<!--Welcome Greeting-->
+
 <h1>Welcome, User!</h1>
 
-<div class="grades-table">
+<!--View Grade Table-->
+
+<div class="grades_table">
     <table>
 
         <tr>
@@ -33,28 +38,26 @@
     </table>
 </div>
 
-<div class="cumulative-qpi">
+<!--Cumulative QPI-->
+
+<div class="cumulative_qpi">
     <h2>Cumulative QPI</h2>
     <p>{{ cumulative_qpi }}</p>
 </div>
 
-<div class="latest-qpi">
+<!--Latest Semestral QPI-->
+
+<div class="latest_qpi">
     <h2>Latest Semestral QPI</h2>
     <p>{{ latest_qpi }}</p>
 </div>
 
-<div class="dean-list">
+<!--Dean's Lister Award-->
+
+<div class="dean_list">
     <h2>Dean's Lister Award</h2>
     <p>{{ dean_list }}</p>
 </div>
-
-{% for s in semester %}
-{{ s }}
-{% endfor %}
-
-{% for q in qpi %}
-{{ q }}
-{% endfor %}
 
 
 <h2>QPI by Semester</h2>
@@ -115,6 +118,114 @@
         },
     });
 </script>
+
+<!--Latin Honors Eligibility-->
+
+<div class="latin_honors_eligibility">
+
+    <h2>Latin Honors Eligibility</h2>
+
+    <form id="input_form" method="post">
+        {% csrf_token %}
+
+        <p>How many are your computable units left?</p>
+        <input type="number" id="remaining_units" name="remaining_units" value="0">
+        <p>Check Eligibility</p>
+        <select id="lh_dropdown" name="lh_input">
+            <option value="cum_laude">Cum Laude</option>
+            <option value="magna_cum_laude">Magna Cum Laude</option>
+            <option value="summa_cum_laude">Summa Cum Laude</option>
+        </select><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="output_ctr">
+        <h3>Remaining Units:</h3> <span id="remaining">{{remaining_units}}</span>
+        <h3>Completed Units:</h3> <span id="completed">{{completed_units}}</span>
+        <h3>IPS Progress:</h3> <span id="completed">{{ips_progress}}%</span>
+
+        {% comment %}
+        <canvas id="ipsProgress"></canvas>
+
+        <script>
+            let percent = JSON.parse('{{ percent|safe }}');
+
+            // Creating line chart
+            let c = document.getElementById('ipsProgress').getContext('2d');
+            let ipsProgress = new Chart(c, {
+                type: 'bar',
+                data: {
+                    labels: ['Progress'],
+                    datasets: [{
+                        data: [percent], // Set the initial progress value (e.g., 75%)
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: false,
+                    scales: {
+                        x: {
+                            display: false,
+                            ticks: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        y: {
+                            display: false
+                        },
+                    },
+                },
+            });
+        </script>
+    </div>
+    {% endcomment %}
+
+    {% comment %}
+    <script>
+        $(document).ready(function () {
+            $('#input_form').submit(function (e) {
+                e.preventDefault();
+                var remaining_units = $('#remaining_units').val();
+
+                console.log("Remaining Units:", remaining_units);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    data: {
+                        remaining_units: remaining_units,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function (data) {
+                        // Log the response data to the console
+                        console.log("Response Data:", data);
+
+                        if (data.remaining_units !== undefined) {
+                            // Update the value of the span element with the id 'result1'
+                            $('#remaining').text(data.remaining_units);
+                        } else {
+                            console.error("Error: No 'remaining_units' found in response data.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Log any errors to the console
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
+
+    {% endcomment %}
+
+</div>
+
 
 
 {% endblock %}
