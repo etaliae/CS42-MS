@@ -124,9 +124,6 @@ class UserTable(models.Model):
 
     def __str__(self):
         return '{}: {}'.format(self.user, self.name)
-    
-    def get_absolute_url(self):
-        return str(self.pk)
 
 # Contains a list of Schedules
 class UserSchedule(models.Model):

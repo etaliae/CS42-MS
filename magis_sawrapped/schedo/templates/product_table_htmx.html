@@ -18,17 +18,6 @@
         <option value="{{ t }}">{{ t }}</option>
         {% endfor %}
     </select>
-
-    <div>
-        {% for table in object_list %}
-            <p><a href="{{table.get_absolute_url}}/details/">
-                {{table.name}} <br/>
-                {{table.time_created}}
-            </a></p>
-            <hr/>
-        {% endfor %}
-    </div>
-
     {# The actual table #}
     {% render_table table %}
 </body>
