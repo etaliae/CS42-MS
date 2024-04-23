@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
-from dashboard.views import dashboard
 
 
 def user_register(request):
@@ -32,7 +31,7 @@ def user_register(request):
             user.save() 
             authenticated_user = authenticate(request, username=username, password=password)
             login(request, authenticated_user)
-            return render(request, '../../dashboard/templates/dashboard/view_grades.html') 
+            return render(request, '../../dashboard/templates/dashboard/dashboard.html') 
 
     return render(request, 'register.html')
 
@@ -61,6 +60,6 @@ def user_login(request):
 
         else:
             login(request, user)
-            return dashboard(request)
+            return render(request, '../../dashboard/templates/dashboard/dashboard.html') 
 
     return render(request, 'login.html')
