@@ -1,7 +1,13 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %} My Grades {% endblock %}
+{% block headImports %}
+<script src="{% static 'htmx.min.js' %}" defer></script>
+{% endblock %}
+
+{% load render_table from django_tables2 %}
+{% load i18n %}
+
 
 {% block content %}
 <body style = 
@@ -9,19 +15,9 @@
     color: #FFF;
     font-family: Inter;
     ">
-    <div class = "container vh-100">
-        <nav class="navbar">
-            <a class ="navbar-brand" href="{% url 'dashboard:dashboard' %}"
-            style = "
-            color: #FFF;
-            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-            font-size: 36px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: normal;">Magis SaWrapped</a>
-        </nav>
-        <nav class="navbar fixed-bottom" 
-            style = "border-top: 6px solid rgba(244, 244, 245, 0.15);
+    <div class = "container">
+        <nav class="navbar fixed-top" 
+            style = "border-bottom: 6px solid rgba(244, 244, 245, 0.15);
             display: flex;
             padding: 29px 143px;
             justify-content: space-between;
@@ -65,38 +61,15 @@
            </div>
         </nav>
         <div class = "container">
-            <h1>View Grades</h1>
-
-            <p><a href="{% url 'dashboard:grade-create' %}">Add New Grade</a></p>
-            <table>
-
-                <tr>
-                    <th>School Year</th>
-                    <th>Sem</th>
-                    <th>Subject Code</th>
-                    <th>Course Title</th>
-                    <th>Units</th>
-                    <th>Final Grade</th>
-                    <th>Options</th>
-                </tr>
-
-                {% for object in object_list %}
-                <tr>
-                    <td>{{ object.semester.school_year }}</td>
-                    <td>{{ object.semester.semester }}</td>
-                    <td>{{ object.subject.subject_code }}</td>
-                    <td>{{ object.subject.course_title }}</td>
-                    <td>{{ object.subject.units }}</td>
-                    <td>{{ object.grade }}</td>
-                    <td>
-                        <a href="{% url 'dashboard:grade-update' object.pk %}">Edit</a>
-                        <a href="{% url 'dashboard:grade-delete' object.pk %}">Delete</a>
-                    </td>
-
-                </tr>
+            <h1>View Courses: </h1>
+            <label>Table: </label>
+            <select id="courses">
+                {% for t in object_list %}
+                <option value="{{ t }}">{{ t }}</option>
                 {% endfor %}
-
-            </table>
+            </select>
+            {# The actual table #}
+            {% render_table table %}
         </div>
     </div>
 </body>
