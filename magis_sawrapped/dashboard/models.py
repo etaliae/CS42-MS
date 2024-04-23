@@ -27,7 +27,7 @@ class Grade(models.Model):
     
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=['semester', 'subject', 'username'],
+            fields=['username', 'semester', 'subject'],
             name='sem_and_sub__uniq')]
         ordering = ['username', '-semester', 'grade']
 
