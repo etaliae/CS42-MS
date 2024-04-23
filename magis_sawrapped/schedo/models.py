@@ -122,6 +122,9 @@ class UserTable(models.Model):
     name = models.CharField(max_length=50)
     time_created = models.DateField(auto_now=False, auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return '{}: {}'.format(self.user, self.name)
     
@@ -132,6 +135,12 @@ class UserTable(models.Model):
 class UserSchedule(models.Model):
     table = models.ForeignKey(UserTable, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return '{}: {}'.format(self.table, self.schedule)
+    
+    def get_absolute_url(self):
+        return str(self.pk)

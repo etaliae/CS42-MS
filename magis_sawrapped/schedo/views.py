@@ -9,7 +9,7 @@ from django_filters.views import FilterView
 
 from .models import UserSchedule, UserTable
 from .tables import UScheduleHTMxTable
-from .forms import UserTableForm
+from .forms import UserTableForm, UserScheduleForm
 
 
 def index(request):
@@ -27,6 +27,8 @@ class UserTableDetailView(TemplateView):
         context['thisTable'] = thisTable
           # Filter on userTable name column
         context['userSchedules'] = UserSchedule.objects.filter(table__name = thisTable.name)
+        context['form'] = UserScheduleForm
+        context['fields'] = fields = '__all__'
         return context
 
 class UserTableCreateView(CreateView):
