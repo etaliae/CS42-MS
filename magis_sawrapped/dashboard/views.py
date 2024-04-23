@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.contrib import messages
 
 from .models import Grade
 from .grades import get_grades, Grades
@@ -12,7 +17,6 @@ import json
 
 @login_required
 def dashboard(request):
-    user_grades = Grade.objects.filter(username=request.user)
     grades = Grades()
     
     df = get_grades()
@@ -66,7 +70,18 @@ class GradeDeleteView(DeleteView):
     template_name = 'dashboard/delete_grade.html'
 
 
-class GradeCreateView(CreateView):
+class GradeCreateView(LoginRequiredMixin, CreateView):
     model = Grade
-    fields = '__all__'
+    fields = ['semester', 'subject', 'grade']
     template_name = 'dashboard/add_grade.html'
+    success_url = reverse_lazy('dashboard:grades-list')
+
+    def form_valid(self, form):
+        current_user = self.request.user
+        user_instance = User.objects.get(username=current_user.username)
+        form.instance.username = user_instance
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            messages.error(self.request, 'Grade entry already exists for this semester and subject.')
+            return self.render_to_response(self.get_context_data(form=form))
