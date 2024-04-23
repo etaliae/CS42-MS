@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -28,8 +29,18 @@ class UserTableDetailView(TemplateView):
           # Filter on userTable name column
         context['userSchedules'] = UserSchedule.objects.filter(table__name = thisTable.name)
         context['form'] = UserScheduleForm
-        context['fields'] = fields = '__all__'
+        context['fields'] = '__all__'
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = UserScheduleForm(request.POST)
+        if form.is_valid():
+            new_userSchedule = form.save()
+            redirect_link = '../' + new_userSchedule.get_absolute_url() + '/details/'
+            return HttpResponseRedirect(self.request.path_info)
+        else:
+            return render(request, self.template_name, {'form': form})
+    
 
 class UserTableCreateView(CreateView):
     
