@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Grade(models.Model):
     
     username = models.ForeignKey(
-        User, on_delete=models.CASCADE, default='', limit_choices_to={'is_staff': False})
+        User, on_delete=models.CASCADE, default='', limit_choices_to={'is_staff': False}, null=True)
     semester = models.ForeignKey(
         SchoolYear, on_delete=models.CASCADE, default='')
     subject = models.ForeignKey(
