@@ -8,6 +8,7 @@
 {% block headImports %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 {% endblock %}
 
@@ -326,35 +327,36 @@
 
                         <h3 style = "align-self: center;">Cumulative Letter Grade Frequency</h3>
                         <div style = "width:fit-content; height: fit-content;">
-                        
-                        <canvas id="letterFreq">
-                        </canvas>
 
-                        <script>
-                            let final_grade = JSON.parse('{{ final_grade|safe }}');
-                            let subject_code = JSON.parse('{{ subject_code|safe }}');
-
-                            // Creating line chart
-                            let b = document.getElementById('letterFreq').getContext('2d');
-                            let letterFreq = new Chart(b, {
-                                type: 'doughnut',
-                                data: {
-                                    labels: final_grade,
-                                    datasets: [
-                                        {
-                                            label: 'Subject Code',
-                                            data: subject_code,
-                                            backgroundColor: [
-                                                'rgb(255, 99, 132)',
-                                                'rgb(54, 162, 235)',
-                                                'rgb(255, 205, 86)'
-                                            ],
-                                            hoverOffset: 4
-                                        },
-                                    ]
-                                },
-                            });
-                        </script>
+                            <canvas id="letterFreq" width="200" height="50">
+                            </canvas>
+                            
+                            <script>
+                                let final_grade = JSON.parse('{{ final_grade|safe }}');
+                                let subject_code = JSON.parse('{{ subject_code|safe }}');
+                            
+                                // Creating line chart
+                                let b = document.getElementById('letterFreq').getContext('2d');
+                                let letterFreq = new Chart(b, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: final_grade,
+                                        datasets: [
+                                            {
+                                                label: 'Subject Code',
+                                                data: subject_code,
+                                                backgroundColor: [
+                                                    'rgb(255, 99, 132)',
+                                                    'rgb(54, 162, 235)',
+                                                    'rgb(255, 205, 86)'
+                                                ],
+                                                hoverOffset: 4
+                                            },
+                                        ]
+                                    },
+                                });
+                            </script>
+                            
                         </div>
                     </div>
                 </div>
@@ -363,4 +365,136 @@
     </div>
 </div>
 </body>
+
+<!--Cumulative QPI-->
+
+<div class="cumulative_qpi">
+    <h2>Cumulative QPI</h2>
+    <p>{{ cumulative_qpi }}</p>
+</div>
+
+<!--Latest Semestral QPI-->
+
+<div class="latest_qpi">
+    <h2>Latest Semestral QPI</h2>
+    <p>{{ latest_qpi }}</p>
+</div>
+
+<!--Dean's Lister Award-->
+
+<div class="dean_list">
+    <h2>Dean's Lister Award</h2>
+    <p>{{ dean_list }}</p>
+</div>
+
+
+<!--Latin Honors Eligibility-->
+
+<div class="latin_honors_eligibility">
+
+    <h2>Latin Honors Eligibility</h2>
+
+    <form id="input_form" method="post">
+        {% csrf_token %}
+
+        <p>How many are your computable units left?</p>
+        <input type="number" id="remaining_units" name="remaining_units" value="0">
+        <p>Check Eligibility</p>
+        <select id="lh_dropdown" name="lh_input">
+            <option value="cum_laude">Cum Laude</option>
+            <option value="magna_cum_laude">Magna Cum Laude</option>
+            <option value="summa_cum_laude">Summa Cum Laude</option>
+        </select><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="output_ctr">
+        <h3>Remaining Units:</h3> <span id="remaining">{{remaining_units}}</span>
+        <h3>Completed Units:</h3> <span id="completed">{{completed_units}}</span>
+        <h3>IPS Progress:</h3> <span id="completed">{{ips_progress}}%</span>
+
+        {% comment %}
+        <canvas id="ipsProgress"></canvas>
+
+        <script>
+            let percent = JSON.parse('{{ percent|safe }}');
+
+            // Creating line chart
+            let c = document.getElementById('ipsProgress').getContext('2d');
+            let ipsProgress = new Chart(c, {
+                type: 'bar',
+                data: {
+                    labels: ['Progress'],
+                    datasets: [{
+                        data: [percent], // Set the initial progress value (e.g., 75%)
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: false,
+                    scales: {
+                        x: {
+                            display: false,
+                            ticks: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        y: {
+                            display: false
+                        },
+                    },
+                },
+            });
+        </script>
+    </div>
+    {% endcomment %}
+
+    {% comment %}
+    <script>
+        $(document).ready(function () {
+            $('#input_form').submit(function (e) {
+                e.preventDefault();
+                var remaining_units = $('#remaining_units').val();
+
+                console.log("Remaining Units:", remaining_units);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    data: {
+                        remaining_units: remaining_units,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function (data) {
+                        // Log the response data to the console
+                        console.log("Response Data:", data);
+
+                        if (data.remaining_units !== undefined) {
+                            // Update the value of the span element with the id 'result1'
+                            $('#remaining').text(data.remaining_units);
+                        } else {
+                            console.error("Error: No 'remaining_units' found in response data.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Log any errors to the console
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
+
+    {% endcomment %}
+
+</div>
+
+
+
 {% endblock %}

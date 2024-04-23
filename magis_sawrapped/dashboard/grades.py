@@ -111,7 +111,69 @@ class Grades:  # Change later to enable other features
             qpi_lst.append(self.semester_qpi(s))
         new_df = pd.DataFrame(data={'Semester': semesters, 'QPI': qpi_lst})
         return new_df
-    
+
     def letter_frequency(self):
         df = self.df
         return df.groupby('Final Grade')['Subject Code'].count().reset_index()
+
+    def qpi_by_course(self, minimum_courses=2):
+        df = self.df
+        df['Units'] = pd.to_numeric(df['Units'], errors='coerce')
+        df['Course'] = df['Subject Code'].str.split().str.get(0)
+        new_df = df.groupby('Course').apply(
+            lambda x: x['Weighted Grade'].sum() / x['Units'].sum()).reset_index()
+        new_df['Subjects'] = df.groupby(
+            'Course')['Subject Code'].count().reset_index()['Subject Code']
+        return new_df[new_df['Subjects'] >= minimum_courses]
+
+    def completed_units(self):
+        df = self.df
+        df['Units'] = pd.to_numeric(df['Units'], errors='coerce')
+        return df['Units'].sum()
+
+    def completed_units_delta(self):
+        df = self.df
+        df = df[df['Semester'] == self.last_sem].copy()
+        df['Units'] = pd.to_numeric(df['Units'], errors='coerce')
+        return df['Units'].sum()
+
+    def check_highest_possible(self, remaining_units, d, by_percent):
+        df = self.df
+        df['Units'] = pd.to_numeric(df['Units'], errors='coerce')
+        total_weighted = df['Weighted Grade'].sum()
+        multiplier = remaining_units / 100 if by_percent else 1
+        print('----------')
+        for letter, amount in d.items():
+            total_weighted += letters[letter] * (amount * multiplier)
+            print(letter, amount, letters[letter]*amount*multiplier)
+        total_units = df['Units'].sum() + remaining_units
+        highest_possible = round(total_weighted / total_units, 2)
+        return highest_possible
+
+    def check_minimum_required(self, remaining_units, honor):
+        df = self.df
+        taken_weighted = df['Weighted Grade'].sum()
+        total_units = df['Units'].sum() + remaining_units
+        remaining_weighted = (
+            honors_dict[honor][0] * total_units) - taken_weighted
+        return round(remaining_weighted/remaining_units, 2)
+
+    def analyze_courses(self, courses):
+        df = self.df
+        filtered_df = df.query('Course in @courses')
+        return filtered_df
+
+    def analyze_courses_qpi(self, courses):
+        df = self.analyze_courses(courses)
+        qpi = round(df['Weighted Grade'].sum() / df['Units'].sum(), 2)
+        return qpi
+
+    def qpi_vs_units(self):
+        df = self.df
+        qpi_sem_df = self.qpi_by_semester(exclude_intersession=True)
+        grouped_df = df.groupby('Semester')['Units'].sum().reset_index()
+        return pd.merge(qpi_sem_df, grouped_df, on='Semester')
+
+    def group_by_units(self):
+        df = self.df
+        return self.df.groupby('Semester')['Units'].sum().reset_index()
