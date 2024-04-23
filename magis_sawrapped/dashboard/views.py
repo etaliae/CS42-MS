@@ -1,16 +1,20 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
+
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.decorators import login_required
 
 from .models import Grade
 from .grades import get_grades, Grades
 
 import json
 
+@login_required
 def dashboard(request):
+    user_grades = Grade.objects.filter(username=request.user)
     grades = Grades()
-
+    
     df = get_grades()
     cumulative_qpi = grades.cumulative_qpi()
     latest_qpi = grades.latest_qpi()
@@ -33,12 +37,21 @@ def dashboard(request):
                'final_grade': final_grade,
                'subject_code': subject_code}
 
+    # Pass user grades to the template
+    context = {'user_grades': grades}
     return render(request, 'dashboard/dashboard.html', context)
 
+    
 
 class GradeListView(ListView):
     model = Grade
     template_name = 'dashboard/view_grades.html'
+    def get_queryset(self):
+        # Get the default queryset
+        queryset = super().get_queryset()
+        # Filter the queryset based on the currently logged-in user's username
+        filtered_queryset = queryset.filter(username=self.request.user)
+        return filtered_queryset
 
 
 class GradeUpdateView(UpdateView):
