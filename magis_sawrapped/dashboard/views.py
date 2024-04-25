@@ -27,7 +27,7 @@ def dashboard(request):
 
     remaining_units = 0
     if request.method == 'POST':
-        remaining_units = int(request.POST['remaining_units'])
+        remaining_units = int(request.POST.get('remaining_units', 0))
         print(f"Remaining units from request: {remaining_units}")
 
     completed_units = grades.completed_units()
