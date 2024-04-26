@@ -27,8 +27,17 @@ from schedo.models import Subject, Professor
 
 class Review(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, default='')
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, default='')
+    professor = models.ForeignKey(
+        Professor, on_delete=models.CASCADE, default='')
     review = models.TextField()
+
+    SENTIMENT_CHOICES = (
+        ("Positive", "Positive"),
+        ("Neutral", "Neutral"),
+        ("Negative", "Negative"),
+    )
+    sentiment = models.CharField(
+        max_length=10, choices=SENTIMENT_CHOICES, default='Positive')
 
     def __str__(self):
         return '{}'.format(self.review)
