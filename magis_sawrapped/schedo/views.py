@@ -38,21 +38,27 @@ class UserTableDetailView(TemplateView):
 class UserTableAdd(CreateView):
     model = UserTable
     form = UserTableForm
-    fields = '__all__'
+    fields = ['name',]
     template_name = 'Schedo/schedo_add.html'
     
-    def post(self, request, *args, **kwargs):
-        form = UserTableForm(request.POST)
-        if form.is_valid():
-            new_assignment = form.save()
-            redirect_link = '../'
-            return HttpResponseRedirect(redirect_link)
-        else:
-            return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        # form.instance.display_name = form.cleaned_data['name']
+        form.save()
+        return HttpResponseRedirect('../')
+    
+    # def post(self, request, *args, **kwargs):
+    #     form = UserTableForm(request.POST)
+    #     if form.is_valid():
+    #         new_assignment = form.save()
+    #         redirect_link = '../'
+    #         return HttpResponseRedirect(redirect_link)
+    #     else:
+    #         return render(request, self.template_name, {'form': form})
     
 class UserTableEdit(UpdateView):
-    model = UserSchedule
-    fields = '__all__'
+    model = UserTable
+    fields = ['name',]
     template_name = 'Schedo/schedo_edit.html'
     
     success_url = '../details/'
