@@ -2,14 +2,15 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponseRedirect
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse
 
 
 from django_tables2 import SingleTableMixin
 from django_filters.views import FilterView
 
 from .models import UserSchedule, UserTable, Subject, Department
-from .forms import UserTableForm
+from .forms import UserTableForm, UserScheduleForm
 from .tables import UScheduleHTMxTable, CoursesHTMxTable
 # from .forms import UserTableForm, UserScheduleForm
 
@@ -40,12 +41,13 @@ class UserTableAdd(CreateView):
     form = UserTableForm
     fields = ['name',]
     template_name = 'Schedo/schedo_add.html'
+    success_url = '../'
     
     def form_valid(self, form):
         form.instance.user = self.request.user
         # form.instance.display_name = form.cleaned_data['name']
         form.save()
-        return HttpResponseRedirect('../')
+        return super().form_valid(form)
     
     # def post(self, request, *args, **kwargs):
     #     form = UserTableForm(request.POST)
@@ -62,6 +64,48 @@ class UserTableEdit(UpdateView):
     template_name = 'Schedo/schedo_edit.html'
     
     success_url = '../details/'
+    
+class UserTableDelete(DeleteView):
+    model = UserTable
+    success_url = '/schedo/'
+    
+    # def form_valid(self, form):
+    #     pk = self.request.user
+    #     # form.instance.display_name = form.cleaned_data['name']
+    #     UserTable.objects.get(pk).delete()
+    #     return super().form_valid(form)
+    template_name = 'schedo/schedo_delete.html'
+
+class UserScheduleAdd(CreateView):
+    model = UserSchedule
+    form = UserScheduleForm
+    fields = '__all__'
+    template_name = 'Schedo/schedule_add.html'
+    success_url = '../'
+
+   
+class UserScheduleEditView(UpdateView):
+    
+    model = UserSchedule
+    fields = ['schedule',]
+    template_name = 'Schedo/schedule_edit.html'
+    
+    success_url = "../../"
+    
+class UserScheduleDelete(DeleteView):
+    model = UserSchedule
+    success_url = '../../details/'
+    
+    template_name = 'schedo/schedule_delete.html'
+    
+    # model = UserSchedule
+    # template_name = "Schedo/schedule_details.html"
+    
+    # def get_sucess_url(self, **kwargs):
+    #     thisTable = self.request.META.get("HTTP_REFERER")
+        
+    #     sucess_url = '../../' + thisTable + '/details/'
+    #     return sucess_url
 
 class UScheduleHTMxTableView(SingleTableMixin, FilterView):
     table_class = UScheduleHTMxTable
