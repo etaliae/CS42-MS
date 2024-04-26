@@ -14,187 +14,181 @@ Dashboard
 
 {% block content %}
 
-<body style="background: linear-gradient(180deg,  #172554 0%, #1E40AF 100%);
+<body 
+    style=
+    "background: linear-gradient(180deg,  #172554 0%, #1E40AF 100%);
     color: #FFF;
-    font-family: Inter;
-    ">
+    font-family: Inter;">
     <div class="container vh-100">
         <div class="row" style="gap: 1%; height: 95%;">
-            <div class="col-7" style="
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 1%;">
-                <div class="row">
-                    <div class="col" style="
+        <!--Left half of the page-->
+            <div class="col-7" 
+                style="
                 display: flex;
-                padding: 30px 32px;
+                flex-direction: column;
                 justify-content: space-between;
-                align-items: flex-end;
-                border-radius: 45px;
-                border: 2px solid #EFF6FF;
-                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                backdrop-filter: blur(36.45000076293945px);">
+                gap: 1%;">
+                <!--Welcome panel-->
+                <div class="row">
+                    <div class="col" 
+                        style="
+                        display: flex;
+                        padding: 30px 32px;
+                        justify-content: space-between;
+                        align-items: flex-end;
+                        border-radius: 45px;
+                        border: 2px solid #EFF6FF;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);">
                         <h1 style="color: #fff;
-                    font-size: 72px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: 90px;
-                    letter-spacing: -1.44px;">
-                            Welcome, <br> <b>{{ user.username }}!</b>
+                            font-size: 72px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: 90px;
+                            letter-spacing: -1.44px;">
+                                Welcome, 
+                                <br>
+                                <b>{{ user.username }}!</b>
                         </h1>
-                        <img src="{% static 'Clipboard.png' %}" style="width: 133px;
-                    height: 165px;">
+                        <img src="{% static 'Clipboard.png' %}" 
+                            style="
+                            width: 133px;
+                            height: 165px;">
                     </div>
                 </div>
-                <div class="row" style="
-                display: flex;
-                gap: 0.5%;
-                flex-wrap: nowrap;
-                flex-direction: row;
-                height: 100%;">
-                    <div class="col-4" style="
+                <!--QPI by semester-->
+                <div class="row" 
+                    style="
                     display: flex;
-                    flex-direction: column;
-                    gap: 2%;
-                    align-content: stretch;">
-                        <div class="row" style="
-                        flex-grow: 1;">
-                            <div class="col" style="
-                            display: flex;
-                            padding: 30px 32px;
-                            justify-content: space-between;
-                            align-items: flex-end;
-                            border-radius: 45px;
-                            border: 2px solid #EFF6FF;
-                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                            backdrop-filter: blur(36.45000076293945px);">
-                            <h3>Remaining Units:</h3> <span id="remaining">{{remaining_units}}</span>
-                            </div>
-                        </div>
-                        <div class="row" style="
-                        flex-grow: 1;">
-                            <div class="col" style="
-                            display: flex;
-                            padding: 30px 32px;
-                            justify-content: space-between;
-                            align-items: flex-end;
-                            border-radius: 45px;
-                            border: 2px solid #EFF6FF;
-                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                            backdrop-filter: blur(36.45000076293945px);">
-                            <h3>Completed Units:</h3> <span id="completed">{{completed_units}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4" style="
-                    display: flex;
-                    padding: 30px 32px;
-                    justify-content: space-between;
-                    align-items: flex-end;
-                    border-radius: 45px;
-                    border: 2px solid #EFF6FF;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                    backdrop-filter: blur(36.45000076293945px);">
-                        <div id="output_ctr">
-                            <h3>IPS Progress:</h3> <span id="completed">{{ips_progress}}%</span>
+                    gap: 0.5%;
+                    flex-wrap: nowrap;
+                    flex-direction: row;
+                    height: 100%;">
+                    <div class="col-8" 
+                        style="
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2%;
+                        align-content: stretch;">
+                        <div class="row">
+                            <div class="col" 
+                                style="
+                                display: flex;
+                                flex-direction: column;
+                                padding: 30px 32px;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                border-radius: 45px;
+                                border: 2px solid #EFF6FF;
+                                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                                backdrop-filter: blur(36.45000076293945px);">
+                            
+                                    <h2>QPI by Semester</h2>
+                                    <br>
+                                    <canvas id="qpiBySem">
+                                    </canvas>
 
-                            <canvas id="ipsProgress"></canvas>
+                                    <script>
+                                        let semester = JSON.parse('{{ semester|safe }}');
+                                        let qpi = JSON.parse('{{ qpi|safe }}');
 
-                            <script>
-                                let percent = JSON.parse('{{ percent|safe }}');
 
-                                // Creating line chart
-                                let c = document.getElementById('ipsProgress').getContext('2d');
-                                let ipsProgress = new Chart(c, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: ['Progress'],
-                                        datasets: [{
-                                            data: [percent], // Set the initial progress value (e.g., 75%)
-                                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                                            borderColor: 'rgba(54, 162, 235, 1)',
-                                            borderWidth: 1,
-                                            barPercentage: 0.5
-                                        }]
-                                    },
-                                    options: {
-                                        indexAxis: 'y',
-                                        responsive: false,
-                                        scales: {
-                                            x: {
-                                                display: false,
-                                                ticks: {
-                                                    beginAtZero: true,
-                                                    max: 100
+                                        let a = document.getElementById('qpiBySem').getContext('2d');
+                                        let qpiBySem = new Chart(a, {
+                                            type: 'line',
+                                            data: {
+                                                labels: semester,
+                                                datasets: [
+                                                    {
+                                                        label: 'QPI',
+                                                        data: qpi,
+                                                        fill: false,
+                                                        borderColor: 'rgb(75, 192, 192)',
+                                                        tension: 0.3
+                                                    },
+                                                ]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                    legend: {
+                                                        display: false
+                                                    }
                                                 }
-                                            },
-                                            y: {
-                                                display: false
-                                            },
-                                        },
-                                    },
-                                });
-                            </script>
-                        </div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $('#input_form').submit(function (e) {
-                                    e.preventDefault();
-                                    var remaining_units = $('#remaining_units').val();
-
-                                    console.log("Remaining Units:", remaining_units);
-
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '',
-                                        data: {
-                                            remaining_units: remaining_units,
-                                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                                        },
-                                        success: function (data) {
-                                            // Log the response data to the console
-                                            console.log("Response Data:", data);
-
-                                            if (data.remaining_units !== undefined) {
-                                                // Update the value of the span element with the id 'result1'
-                                                $('#remaining').text(data.remaining_units);
-                                            } else {
-                                                console.error("Error: No 'remaining_units' found in response data.");
                                             }
-                                        },
-                                        error: function (xhr, status, error) {
-                                            // Log any errors to the console
-                                            console.error("AJAX Error:", error);
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
-                    </div>
-                    <div class="col-4" style="
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2%;
-                    align-content: stretch;">
-                        <div class="row" style="
-                        flex-grow: 1;">
-                            <div class="col" style="
-                            display: flex;
-                            padding: 30px 32px;
-                            justify-content: space-between;
-                            align-items: flex-end;
-                            border-radius: 45px;
-                            border: 2px solid #EFF6FF;
-                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                            backdrop-filter: blur(36.45000076293945px);">
-                                <h3>Upload IPS</h3>
+                                        });
+                                    </script>
                             </div>
                         </div>
-                        <div class="row" style="
-                        flex-grow: 1;">
-                            <div class="col" style="
+                    </div>
+                    <!-- <div class="col-4" 
+                        style="
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2%;
+                        justify-content: flex-end;">
+                        <div class="row">
+                            <div class="col" 
+                                style="
+                                display: flex;
+                                padding: 26px 26px;
+                                justify-content: space-between;
+                                align-items: flex-end;
+                                border-radius: 45px;
+                                border: 6px solid #121471;
+                                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                                backdrop-filter: blur(36.45000076293945px);">
+                                    <a href="{% url 'dashboard:grades-list' %}" 
+                                    style="
+                                    color: #FFF;
+                                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                                    font-size: 44px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    text-decoration: none;
+                                    line-height: normal;">
+                                    View Grades
+                                    </a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <!--View grades-->
+                <div class="row"
+                    style = "justify-content: flex-end;">
+                    <div class="col-6" 
+                        style="
+                        display: flex;
+                        padding: 26px 26px;
+                        align-items: flex-end;
+                        border-radius: 45px;
+                        flex-direction: row-reverse;
+                        justify-content: space-between;
+                        border: 6px solid #121471;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);
+                        flex-wrap: nowrap;">
+                            <img src="{% static 'Hands.png' %}" style="width: 120px;">
+                            <a href="{% url 'dashboard:grades-list' %}" 
+                            style="
+                            color: #FFF;
+                            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                            font-size: 44px;
+                            font-style: normal;
+                            font-weight: 700;
+                            text-decoration: none;
+                            line-height: normal;">
+                                View Grades
+                            </a>
+                    </div>
+                </div>
+                <div class="row" 
+                    style="
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    gap: 0.5%;">
+                    <div class="col-6" 
+                        style="
                         display: flex;
                         padding: 26px 26px;
                         justify-content: space-between;
@@ -203,162 +197,211 @@ Dashboard
                         border: 6px solid #121471;
                         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
                         backdrop-filter: blur(36.45000076293945px);">
-                                <a href="{% url 'dashboard:grades-list' %}" style="
-                            color: #FFF;
-                            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-                            font-size: 44px;
-                            font-style: normal;
-                            font-weight: 700;
-                            text-decoration: none;
-                            line-height: normal;">View Grades</a>
-                            </div>
-                        </div>
+                            <img src="{% static 'Calendar.png' %}" style="width: 120px;">
+                        <a href="{% url 'schedo:landing' %}" 
+                        style="
+                        color: #FFF;
+                        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                        font-size: 44px;
+                        font-style: normal;
+                        font-weight: 700;
+                        text-decoration: none;
+                        line-height: normal;">Schedo</a>
                     </div>
-                </div>
-                <div class="row" style="
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            gap: 0.5%;">
-                    <div class="col-6" style="
-                    display: flex;
-                    padding: 26px 26px;
-                    justify-content: space-between;
-                    align-items: flex-end;
-                    border-radius: 45px;
-                    border: 6px solid #121471;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                    backdrop-filter: blur(36.45000076293945px);">
-                        <img src="{% static 'Calendar.png' %}" style="width: 120px;">
-                        <a href="{% url 'schedo:landing' %}" style="
-                    color: #FFF;
-                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-                    font-size: 44px;
-                    font-style: normal;
-                    font-weight: 700;
-                    text-decoration: none;
-                    line-height: normal;">Schedo</a>
-                    </div>
-                    <div class="col-6" style="
-                    display: flex;
-                    padding: 26px 26px;
-                    justify-content: space-between;
-                    align-items: flex-end;
-                    border-radius: 45px;
-                    border: 6px solid #121471;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                    backdrop-filter: blur(36.45000076293945px);">
-                        <img src="{% static 'VizProf.png' %}" style="width: 120px; height: 120px;">
+                    <div class="col-6" 
+                        style="
+                        display: flex;
+                        padding: 26px 26px;
+                        justify-content: space-between;
+                        align-items: flex-end;
+                        border-radius: 45px;
+                        border: 6px solid #121471;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        backdrop-filter: blur(36.45000076293945px);">
+                            <img src="{% static 'VizProf.png' %}" 
+                            style="
+                            width: 120px;
+                            height: 120px;">
                         <a href="#" style="
-                    color: #FFF;
-                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-                    font-size: 44px;
-                    font-style: normal;
-                    font-weight: 700;
-                    text-decoration: none;
-                    line-height: normal;">
+                        color: #FFF;
+                        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                        font-size: 44px;
+                        font-style: normal;
+                        font-weight: 700;
+                        text-decoration: none;
+                        line-height: normal;">
                             VizProf
                         </a>
                     </div>
                 </div>
             </div>
-        <div class="col-4" style="
+        <!--Right half of the page-->
+        <div class="col-4" 
+            style="
             display: flex;
             width: 497px;
             gap: 2%;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: nowrap;">
-                <div class="row" style="
+            flex-direction: column;">
+                <div class="row" 
+                    style="
+                    flex: 1;
                     display: flex;
                     flex-wrap: nowrap;
-                    gap: 0.5%;">
-                    <div class="col-6" style="
-                    padding: 30px 32px;
-                    border-radius: 45px;
-                    border: 2px solid #EFF6FF;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                    backdrop-filter: blur(36.45000076293945px);">
+                    gap: 1%;">
+                    <!--Latin Honors and IPS Progress-->
+                    <div class="col-6" 
+                        style="
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1%;">
+                        <div class="row" 
+                            style="
+                            flex: 1;
+                            margin-top: 2%;
+                            padding: 30px 30px;
+                            border-radius: 45px;
+                            border: 2px solid #EFF6FF;
+                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                            backdrop-filter: blur(36.45000076293945px);">
 
-                        <div class="latin_honors_eligibility">
+                            <!--Latin Honors Eligibility-->
+                            <div class="latin_honors_eligibility">
 
-                            <h4>Latin Honors Eligibility</h4>
+                                <h2>Latin Honors Eligibility</h2>
 
-                            <form id="input_form" method="post">
-                                {% csrf_token %}
+                                <form id="input_form" method="post">
+                                    {% csrf_token %}
 
-                                <p>How many are your computable units left?</p>
-                                <input type="number" id="remaining_units" name="remaining_units" value="0"
-                                    style="width: 50%;">
-                                <p>Check Eligibility</p>
-                                <select id="lh_dropdown" name="lh_input">
-                                    <option value="cum_laude">Cum Laude</option>
-                                    <option value="magna_cum_laude">Magna Cum Laude</option>
-                                    <option value="summa_cum_laude">Summa Cum Laude</option>
-                                </select><br><br>
+                                    <p>How many are your computable units left?</p>
+                                    <input type="number" id="remaining_units" name="remaining_units" value="0"
+                                    style = "width: 50%;">
+                                    <p>Check Eligibility</p>
+                                    <select id="honor" name="honor">
+                                        <option value="Honorable Mention">Honorable Mention</option>
+                                        <option value="Cum Laude">Cum Laude</option>
+                                        <option value="Magna Cum Laude">Magna Cum Laude</option>
+                                        <option value="Summa Cum Laude">Summa Cum Laude</option>
+                                    </select><br><br>
 
-                                <input type="submit" value="Submit">
-                            </form>
+                                    <input type="submit" value="Submit">
+                                </form>
+
+                                {% comment %}
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#input_form').submit(function (e) {
+                                            e.preventDefault();
+                                            var remaining_units = $('#remaining_units').val();
+
+                                            console.log("Remaining Units:", remaining_units);
+
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: '',
+                                                data: {
+                                                    remaining_units: remaining_units,
+                                                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                                },
+                                                success: function (data) {
+                                                    // Log the response data to the console
+                                                    console.log("Response Data:", data);
+
+                                                    if (data.remaining_units !== undefined) {
+                                                        // Update the value of the span element with the id 'result1'
+                                                        $('#remaining').text(data.remaining_units);
+                                                    } else {
+                                                        console.error("Error: No 'remaining_units' found in response data.");
+                                                    }
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    // Log any errors to the console
+                                                    console.error("AJAX Error:", error);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+                                {% endcomment %}
+                            </div>
+                            
+                        </div>
+                        <div class="row" 
+                            style="
+                            padding: 30px 32px;
+                            border-radius: 45px;
+                            border: 2px solid #EFF6FF;
+                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                            backdrop-filter: blur(36.45000076293945px);">
+                            <div id="output_ctr">
+
+                                <h3>IPS Progress</h3>
+                                <strong><span id="progress">{{ ips_progress }}%</span></strong>
+                                <p>
+                                    You're making excellent progress!
+                                    <span id="completed">{{ completed_units }}</span> units down,
+                                    <span id="remaining">{{ remaining_units }}</span> more units to go!
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6" style="gap: 2%;">
-                        <div class="row" style="
+                    <!--Honorable Mention-->
+                    <div class="col-6" 
+                        style="
                         padding: 30px 32px;
                         border-radius: 45px;
                         border: 2px solid #EFF6FF;
                         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
                         backdrop-filter: blur(36.45000076293945px);">
-                            <div class="cumulative-qpi">
-                                <h3>Cumulative QPI</h3>
-                                <p>{{ cumulative_qpi }}</p>
-                            </div>
-                        </div>
-                        <div class="row" style="
-                        margin-top: 2%;
-                        padding: 30px 30px;
-                        border-radius: 45px;
-                        border: 2px solid #EFF6FF;
-                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                        backdrop-filter: blur(36.45000076293945px);">
-                            <!-- <div class="latest-qpi">
-                            <h3>Latest Semestral QPI</h3>
-                            <p>{{ latest_qpi }}</p>
-                        </div> -->
-                            <h4>QPI by Semester</h4>
-
-                            <canvas id="qpiBySem">
-                            </canvas>
-
-                            <script>
-                                let semester = JSON.parse('{{ semester|safe }}');
-                                let qpi = JSON.parse('{{ qpi|safe }}');
-
-
-                                let a = document.getElementById('qpiBySem').getContext('2d');
-                                let qpiBySem = new Chart(a, {
-                                    type: 'line',
-                                    data: {
-                                        labels: semester,
-                                        datasets: [
-                                            {
-                                                label: 'QPI',
-                                                data: qpi,
-                                                fill: false,
-                                                borderColor: 'rgb(75, 192, 192)',
-                                                tension: 0.3
-                                            },
-                                        ]
-                                    },
-                                    options: {
-                                        plugins: {
-                                            legend: {
-                                                display: false
-                                            }
-                                        }
-                                    }
-                                });
-                            </script>
+                        <div id="output_ctr">
+                            <h3 style = "
+                                font-size: 36px;
+                                font-style: normal;
+                                font-weight: 700;
+                                line-height: normal;">
+                                <span id="honor_chosen">
+                                    {{ honor }}
+                                </span> is ... <br>
+                            </h3>
+                            <img src="{% static 'Rocket.png' %}" 
+                                style="
+                                width: 140px;">
+                            <strong><span id="eligibility">{{ eligibility_text }}</span></strong>
+                            <p>
+                                To achieve this,
+                                get a minimum QPI of <span id="minimum">{{ minimum_required }}</span>
+                                on your remaining <span id="remaining">{{ remaining_units }}</span> units.
+                            </p>
+                            <p>
+                                Highest Attainable: 
+                                <span id="highest" 
+                                    style = "
+                                    font-size: 36px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;">
+                                    {{ highest_possible }}
+                                </span><br><br>
+                                Honor Range: 
+                                <span id="honor_min" 
+                                    style = "
+                                    font-size: 36px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;">
+                                    {{ honor_min }}
+                                </span> <br>
+                                    to 
+                                <br> <span id="honor_max" 
+                                    style = "
+                                    font-size: 36px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;">
+                                    {{ honor_max }}
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -397,8 +440,12 @@ Dashboard
                         backdrop-filter: blur(36.45000076293945px);
                         align-self: stretch;">
 
-                        <h3 style="align-self: center;">Cumulative Letter Grade Frequency</h3>
-                        <div style="width:fit-content; height: fit-content;">
+                        <h3 style="align-self: center;">
+                            Cumulative Letter Grade Frequency
+                        </h3>
+                        <div style="
+                            width:fit-content;
+                            height: fit-content;">
 
                             <canvas id="letterFreq" width="200" height="50">
                             </canvas>
@@ -445,7 +492,6 @@ Dashboard
             </div>
         </div>
     </div>
-    </div>
 </body>
 
 <!--Latest Semestral QPI-->
@@ -463,89 +509,7 @@ Dashboard
 </div> -->
 
 
-<!--Latin Honors Eligibility-->
-<div class="latin_honors_eligibility">
 
-    <h2>Latin Honors Eligibility</h2>
-
-    <form id="input_form" method="post">
-        {% csrf_token %}
-
-        <p>How many are your computable units left?</p>
-        <input type="number" id="remaining_units" name="remaining_units" value="0">
-        <p>Check Eligibility</p>
-        <select id="honor" name="honor">
-            <option value="Honorable Mention">Honorable Mention</option>
-            <option value="Cum Laude">Cum Laude</option>
-            <option value="Magna Cum Laude">Magna Cum Laude</option>
-            <option value="Summa Cum Laude">Summa Cum Laude</option>
-        </select><br><br>
-
-        <input type="submit" value="Submit">
-    </form>
-
-    <div id="output_ctr">
-
-        <h3>IPS Progress</h3>
-        <strong><span id="progress">{{ ips_progress }}%</span></strong>
-        <p>
-            You're making excellent progress!
-            <span id="completed">{{ completed_units }}</span> units down,
-            <span id="remaining">{{ remaining_units }}</span> more units to go!
-        </p>
-
-        <h3><span id="honor_chosen">{{ honor }}</span> is ... <br></h3>
-        <strong><span id="eligibility">{{ eligibility_text }}</span></strong>
-        <p>
-            To achieve this,
-            get a minimum QPI of <span id="minimum">{{ minimum_required }}</span>
-            on your remaining <span id="remaining">{{ remaining_units }}</span> units.
-        </p>
-        <p>
-            Highest Attainable: <span id="highest">{{ highest_possible }}</span><br>
-            Honor Range: <span id="honor_min">{{ honor_min }}</span> to <span id="honor_max">{{ honor_max }}</span>
-        </p>
-    </div>
-
-    {% comment %}
-    <script>
-        $(document).ready(function () {
-            $('#input_form').submit(function (e) {
-                e.preventDefault();
-                var remaining_units = $('#remaining_units').val();
-
-                console.log("Remaining Units:", remaining_units);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    data: {
-                        remaining_units: remaining_units,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    success: function (data) {
-                        // Log the response data to the console
-                        console.log("Response Data:", data);
-
-                        if (data.remaining_units !== undefined) {
-                            // Update the value of the span element with the id 'result1'
-                            $('#remaining').text(data.remaining_units);
-                        } else {
-                            console.error("Error: No 'remaining_units' found in response data.");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // Log any errors to the console
-                        console.error("AJAX Error:", error);
-                    }
-                });
-            });
-        });
-    </script>
-
-    {% endcomment %}
-
-</div>
 
 
 {% endblock %}
