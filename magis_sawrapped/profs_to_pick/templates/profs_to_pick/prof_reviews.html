@@ -12,35 +12,100 @@
 {% endblock %}
 
 {% block content %}
+<body style = 
+    "background: linear-gradient(180deg,  #172554 0%, #1E40AF 100%);
+    color: #FFF;
+    font-family: Inter;
+    ">
+    <div class = "container">
+        <nav class="navbar fixed-top" 
+            style = "border-bottom: 6px solid rgba(244, 244, 245, 0.15);
+            display: flex;
+            padding: 29px 143px;
+            justify-content: space-between;
+            align-items: flex-start;">
+           <div class = "collase navbar-collapse">
+                <div class = "navbar=nav"
+                    style = "
+                    display: flex;
+                    justify-content: space-between;">
+                    <a class="" href="{% url 'dashboard:dashboard' %}"
+                    style = "
+                    text-decoration: none;
+                    color: #FFF;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-family: Inter;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 32px;">Home</a>
+                    <a class="" href="{% url 'schedo:landing' %}"
+                    style = "
+                    text-decoration: none;
+                    color: #FFF;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-family: Inter;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 32px;">Schedo</a>
+                    <a class="" href="{% url 'profs_to_pick:vizprof-search' %}"
+                    style = "
+                    text-decoration: none;
+                    color: #60A5FA;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-family: Inter;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 32px;">VizProf</a>
+                </div>
+           </div>
+        </nav>
 
-<p><a href="{% url 'profs_to_pick:vizprof-search' %}">Back to Search Page</a></p>
+        
 
-<!--Professor Details-->
-<h2>{{ object }}</h2>
-<strong><i>{{ object.department }}</i></strong>
+        <!--Professor Details-->
+        <h2>{{ object }}</h2>
+        <strong><i>{{ object.department }}</i></strong>
 
-<h3>Student Reviews:</h3>
+        <h3>Student Reviews:</h3>
 
-<div id="reviews">
-    <table>
+        <div id="reviews">
+            <table>
 
-        <tr>
-            <th>Subject</th>
-            <th>Review</th>
-            <th>Sentiment</th>
-        </tr>
+                <tr>
+                    <th>Subject</th>
+                    <th>Review</th>
+                    <th>Sentiment</th>
+                </tr>
 
-        {% for review in reviews %}
-        {% if object == review.professor %}
-        <tr>
-            <td>{{ review.subject }}</td>
-            <td>{{ review.review }}</td>
-            <td>{{ review.sentiment }}</td>
-        </tr>
-        {% endif %}
-        {% endfor %}
+                {% for review in reviews %}
+                {% if object == review.professor %}
+                <tr>
+                    <td>{{ review.subject }}</td>
+                    <td>{{ review.review }}</td>
+                    <td>{{ review.sentiment }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
 
-    </table>
-</div>
+            </table>
+        </div>
+        <p><a href="{% url 'profs_to_pick:vizprof-search' %}"
+            style = "
+                    text-decoration: none;
+                    color: #FFF;
+                    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    font-family: Inter;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 32px;">
+                <- Back to Search Page
+                </a>
+            </p>
 
+    </div>
+</body>
 {% endblock %}
