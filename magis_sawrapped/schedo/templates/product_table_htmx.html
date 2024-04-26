@@ -14,7 +14,7 @@
     <h1>Select a schedule.</h1>
     <label>Your Table: </label>
     <select id="userTable">
-        {% for t in object_list %}
+        {% for t in table %}
         <option value="{{ t }}">
             {{ t }}
         </option>
@@ -22,7 +22,7 @@
     </select>
 
     <div>
-        {% for table in object_list %}
+        {% for table in table %}
             <p><a href="{{table.get_absolute_url}}/details/">
                 {{table.name}} <br/>
                 {{table.time_created}}
@@ -33,5 +33,9 @@
 
     {# The actual table #}
     {% render_table table %}
+
+    <a href="add/">
+        <button>New Table</button>
+    </a>
 </body>
 {% endblock %}

@@ -122,6 +122,9 @@ class UserTable(models.Model):
     name = models.CharField(max_length=50)
     time_created = models.DateField(auto_now=False, auto_now_add=True)
 
+    def getThisUser(self):
+        return UserTable.objects.filter(user=self.user)
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
