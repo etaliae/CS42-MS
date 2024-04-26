@@ -92,6 +92,12 @@ class UserScheduleEditView(UpdateView):
     
     success_url = "../../"
     
+class UserScheduleDelete(DeleteView):
+    model = UserSchedule
+    success_url = '../../details/'
+    
+    template_name = 'schedo/schedule_delete.html'
+    
     # model = UserSchedule
     # template_name = "Schedo/schedule_details.html"
     

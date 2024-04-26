@@ -1,0 +1,12 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Schedule?{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete Schedule">
+    </form>
+{% endblock %}
