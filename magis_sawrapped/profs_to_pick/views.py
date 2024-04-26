@@ -5,6 +5,7 @@ from django.db.models import Count
 
 from .models import Review
 from schedo.models import Professor
+import json
 
 
 class ProfessorListView(ListView):
@@ -26,7 +27,8 @@ class ProfessorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['reviews'] = Review.objects.all()
-        sentiment_counts = Review.objects.filter(professor=self.get_object().pk).values(
+        reviews = Review.objects.filter(professor=self.get_object())
+        sentiment_counts = reviews.values(
             'sentiment').annotate(count=Count('sentiment'))
 
         sentiment = []
@@ -35,8 +37,9 @@ class ProfessorDetailView(DetailView):
             sentiment.append(sentiment_count['sentiment'])
             count.append(sentiment_count['count'])
 
-            context['sentiment_data'] = {
-                'sentiment': sentiment,
-                'count': count,
-            }
-            return context
+        context['sentiment_data'] = json.dumps({
+            'sentiment': sentiment,
+            'count': count,
+        })
+
+        return context

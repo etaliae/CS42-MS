@@ -19,9 +19,38 @@
 <h2>{{ object }}</h2>
 <strong><i>{{ object.department }}</i></strong>
 
-<h3>Student Reviews:</h3>
+<div id="overall_sentiment">
+    <h3>Overall Sentiment</h3>
+    <canvas id="overallSentiment"></canvas>
+
+    <script>
+        let sentiment_data = JSON.parse('{{ sentiment_data|safe }}');
+
+        let b = document.getElementById('overallSentiment').getContext('2d');
+        let overallSentiment = new Chart(b, {
+            type: 'doughnut',
+            data: {
+                labels: sentiment_data.sentiment,
+                datasets: [
+                    {
+                        label: 'Count',
+                        data: sentiment_data.count,
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)'
+                        ],
+                        hoverOffset: 4
+                    },
+                ]
+            },
+        });
+    </script>
+</div>
 
 <div id="reviews">
+
+    <h3>Student Reviews:</h3>
     <table>
 
         <tr>
@@ -41,6 +70,7 @@
         {% endfor %}
 
     </table>
+
 </div>
 
 {% endblock %}
