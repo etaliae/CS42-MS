@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{thisTable.name}} {% endblock %}
+
+{% block content %}
+    <h2>{{thisTable.name}}</h2>
+
+    <div>
+        Here are your schedules
+        <hr/>
+        {% for schedule in userSchedules %}
+            <p>
+                {{schedule}}
+            </p>
+            <hr/>
+        {% endfor %}
+    </div>
+
+    <div>
+        <a href="../edit/">
+            <button>Edit Schedule</button>
+        </a>
+    </div>
+
+    <div>
+        <a href="../../">Back to List of Schedule Tables</a>
+    </div>
+{% endblock %}
+
+{% block form %}
+    <h2>Add a new schedule:</h2>
+
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        {% if field.errors %}
+            <p>{{ field.label }} has the following errors:</p>
+            <ul>
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save New Assignment">
+    </form>
+{% endblock %}
