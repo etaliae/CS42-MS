@@ -64,7 +64,7 @@ class GradeUpdateView(UpdateView):
 
 class GradeDeleteView(DeleteView):
     model = Grade
-    success_url = "/grades/"
+    success_url = "/dashboard/grades/"
     template_name = 'dashboard/delete_grade.html'
 
 
