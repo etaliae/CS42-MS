@@ -11,7 +11,9 @@
         <hr/>
         {% for schedule in userSchedules %}
             <p>
-                {{schedule}}
+                <a href="../../{{schedule.get_absolute_url}}/schedule">
+                    {{schedule}}
+                </a>
             </p>
             <hr/>
         {% endfor %}
@@ -23,29 +25,13 @@
         </a>
     </div>
 
+    {% comment %} Add form method here soon {% endcomment %}
+    <form method="">
+        {% csrf_token %}
+        <input type="submit" value="Delete Table">
+    </form>
+
     <div>
         <a href="../../">Back to List of Schedule Tables</a>
     </div>
-{% endblock %}
-
-{% block form %}
-    <h2>Add a new schedule:</h2>
-
-    {{ form.non_field_errors }}
-    {% for field in form %}
-        {% if field.errors %}
-            <p>{{ field.label }} has the following errors:</p>
-            <ul>
-            {% for error in field.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endfor %}
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save New Assignment">
-    </form>
 {% endblock %}

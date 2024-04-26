@@ -1,0 +1,11 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Table{% endblock %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete Table">
+    </form>
+{% endblock %}
