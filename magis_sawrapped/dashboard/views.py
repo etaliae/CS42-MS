@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .models import Grade
-from .grades import get_grades, Grades
+from .grades import get_grades, Grades, honors_dict
 
 import json
 
@@ -26,13 +26,29 @@ def dashboard(request):
     subject_code = json.dumps(letter_frequency['Subject Code'].tolist())
 
     remaining_units = 0
+    honor = 'Honorable Mention'
     if request.method == 'POST':
         remaining_units = int(request.POST.get('remaining_units', 0))
+        honor = request.POST.get('honor', 'Honorable Mention')
         print(f"Remaining units from request: {remaining_units}")
+        print(f"User Choice: {honor}")
 
     completed_units = grades.completed_units()
     total = completed_units + remaining_units
     ips_progress = round(grades.completed_units() * 100 / total, 2).tolist()
+
+    honor_min = honors_dict[honor][0]
+    honor_max = honors_dict[honor][-1]
+    highest_possible = grades.check_highest_possible(
+        remaining_units, {'A': 100}, by_percent=True)
+    minimum_required = grades.check_minimum_required(remaining_units, honor)
+    eligibility_text = 'Possible!' if highest_possible >= honors_dict[
+        honor][0] else 'Impossible'
+    print(f"Highest Possible Grade: {highest_possible}")
+    print(f"Minimum Grade Required: {minimum_required}")
+    print(eligibility_text)
+    print(honor_min)
+    print(honor_max)
 
     context = {'df': df,
                'cumulative_qpi': cumulative_qpi,
@@ -44,9 +60,16 @@ def dashboard(request):
                'subject_code': subject_code,
                'remaining_units': remaining_units,
                'completed_units': completed_units,
-               'ips_progress': ips_progress}
+               'ips_progress': ips_progress,
+               'honor': honor,
+               'honor_min': honor_min,
+               'honor_max': honor_max,
+               'minimum_required': minimum_required,
+               'highest_possible': highest_possible,
+               'eligibility_text': eligibility_text
+               }
 
-    print(context)
+    # print(context)
 
     return render(request, 'dashboard/dashboard.html', context)
 

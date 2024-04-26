@@ -248,7 +248,6 @@ Dashboard
                                 let semester = JSON.parse('{{ semester|safe }}');
                                 let qpi = JSON.parse('{{ qpi|safe }}');
 
-                                // Creating line chart
                                 let a = document.getElementById('qpiBySem').getContext('2d');
                                 let qpiBySem = new Chart(a, {
                                     type: 'line',
@@ -260,55 +259,23 @@ Dashboard
                                                 data: qpi,
                                                 fill: false,
                                                 borderColor: 'rgb(75, 192, 192)',
-                                                tension: 0.1
+                                                tension: 0.3
                                             },
                                         ]
                                     },
+                                    options: {
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        }
+                                    }
                                 });
                             </script>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="align-self: stretch;">
-                    <!-- <div class="grades-table table" style = "
-                    padding: 31px 36px;
-                    border-radius: 45px;
-                    border: 2px solid #EFF6FF;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                    backdrop-filter: blur(36.45000076293945px);
-                    align-self: stretch;">
-                    <table>
-                
-                        <tr>
-                            {% for column in df.columns %}
-                            <th>{{ column }}</th>
-                            {% endfor %}
-                        </tr>
-                
-                        {% for row in df.values %}
-                        <tr>
-                            {% for value in row %}
-                            <td>{{ value }}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endfor %}
-                
-                    </table> -->
-                    <div style="
-                        display:flex;
-                        flex-direction: row;
-                        padding: 30px 32px;
-                        border-radius: 45px;
-                        border: 2px solid #EFF6FF;
-                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                        backdrop-filter: blur(36.45000076293945px);
-                        align-self: stretch;">
 
-                        <h3 style="align-self: center;">Cumulative Letter Grade Frequency</h3>
-                        <div style="width:fit-content; height: fit-content;">
+                            <h2>Cumulative Letter Grade Frequency</h2>
 
-                            <canvas id="letterFreq" width="200" height="50">
-                            </canvas>
+                            <canvas id="letterFreq"></canvas>
 
                             <script>
                                 let final_grade = JSON.parse('{{ final_grade|safe }}');
@@ -367,6 +334,37 @@ Dashboard
 </div>
 
 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+
+<!--Cumulative QPI-->
+
+<div class="cumulative_qpi">
+    <h2>Cumulative QPI</h2>
+    <p>{{ cumulative_qpi }}</p>
+</div>
+
+<!--Latest Semestral QPI-->
+
+<div class="latest_qpi">
+    <h2>Latest Semestral QPI</h2>
+    <p>{{ latest_qpi }}</p>
+</div>
+
+<!--Dean's Lister Award-->
+
+<div class="dean_list">
+    <h2>Dean's Lister Award</h2>
+    <p>{{ dean_list }}</p>
+</div>
+
+
 <!--Latin Honors Eligibility-->
 
 <div class="latin_honors_eligibility">
@@ -379,61 +377,38 @@ Dashboard
         <p>How many are your computable units left?</p>
         <input type="number" id="remaining_units" name="remaining_units" value="0">
         <p>Check Eligibility</p>
-        <select id="lh_dropdown" name="lh_input">
-            <option value="honorable_mention">Honorable Mention</option>
-            <option value="cum_laude">Cum Laude</option>
-            <option value="magna_cum_laude">Magna Cum Laude</option>
-            <option value="summa_cum_laude">Summa Cum Laude</option>
+        <select id="honor" name="honor">
+            <option value="Honorable Mention">Honorable Mention</option>
+            <option value="Cum Laude">Cum Laude</option>
+            <option value="Magna Cum Laude">Magna Cum Laude</option>
+            <option value="Summa Cum Laude">Summa Cum Laude</option>
         </select><br><br>
 
         <input type="submit" value="Submit">
     </form>
 
     <div id="output_ctr">
-        <h3>Remaining Units:</h3> <span id="remaining">{{remaining_units}}</span>
-        <h3>Completed Units:</h3> <span id="completed">{{completed_units}}</span>
-        <h3>IPS Progress:</h3> <span id="completed">{{ips_progress}}%</span>
 
-        {% comment %}
-        <canvas id="ipsProgress"></canvas>
+        <h3>IPS Progress</h3>
+        <strong><span id="progress">{{ ips_progress }}%</span></strong>
+        <p>
+            You're making excellent progress!
+            <span id="completed">{{ completed_units }}</span> units down,
+            <span id="remaining">{{ remaining_units }}</span> more units to go!
+        </p>
 
-        <script>
-            let percent = JSON.parse('{{ percent|safe }}');
-
-            // Creating line chart
-            let c = document.getElementById('ipsProgress').getContext('2d');
-            let ipsProgress = new Chart(c, {
-                type: 'bar',
-                data: {
-                    labels: ['Progress'],
-                    datasets: [{
-                        data: [percent], // Set the initial progress value (e.g., 75%)
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        barPercentage: 0.5
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: false,
-                    scales: {
-                        x: {
-                            display: false,
-                            ticks: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        },
-                        y: {
-                            display: false
-                        },
-                    },
-                },
-            });
-        </script>
+        <h3><span id="honor_chosen">{{ honor }}</span> is ... <br></h3>
+        <strong><span id="eligibility">{{ eligibility_text }}</span></strong>
+        <p>
+            To achieve this,
+            get a minimum QPI of <span id="minimum">{{ minimum_required }}</span>
+            on your remaining <span id="remaining">{{ remaining_units }}</span> units.
+        </p>
+        <p>
+            Highest Attainable: <span id="highest">{{ highest_possible }}</span><br>
+            Honor Range: <span id="honor_min">{{ honor_min }}</span> to <span id="honor_max">{{ honor_max }}</span>
+        </p>
     </div>
-    {% endcomment %}
 
     {% comment %}
     <script>
