@@ -62,14 +62,12 @@
 
 <h2>QPI by Semester</h2>
 
-<canvas id="qpiBySem" width="200" height="50">
-</canvas>
+<canvas id="qpiBySem"></canvas>
 
 <script>
     let semester = JSON.parse('{{ semester|safe }}');
     let qpi = JSON.parse('{{ qpi|safe }}');
 
-    // Creating line chart
     let a = document.getElementById('qpiBySem').getContext('2d');
     let qpiBySem = new Chart(a, {
         type: 'line',
@@ -81,23 +79,28 @@
                     data: qpi,
                     fill: false,
                     borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
+                    tension: 0.3
                 },
             ]
         },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
     });
 </script>
 
 <h2>Cumulative Letter Grade Frequency</h2>
 
-<canvas id="letterFreq" width="200" height="50">
-</canvas>
+<canvas id="letterFreq"></canvas>
 
 <script>
     let final_grade = JSON.parse('{{ final_grade|safe }}');
     let subject_code = JSON.parse('{{ subject_code|safe }}');
 
-    // Creating line chart
     let b = document.getElementById('letterFreq').getContext('2d');
     let letterFreq = new Chart(b, {
         type: 'doughnut',
@@ -108,14 +111,25 @@
                     label: 'Subject Code',
                     data: subject_code,
                     backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#073376',
+                        '#046E94',
+                        '#29B2A0',
+                        '#FFCC33',
+                        '#F3D643',
+                        '#FFAE42',
+                        '#C36721'
                     ],
                     hoverOffset: 4
                 },
             ]
         },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
     });
 </script>
 
@@ -131,60 +145,38 @@
         <p>How many are your computable units left?</p>
         <input type="number" id="remaining_units" name="remaining_units" value="0">
         <p>Check Eligibility</p>
-        <select id="lh_dropdown" name="lh_input">
-            <option value="cum_laude">Cum Laude</option>
-            <option value="magna_cum_laude">Magna Cum Laude</option>
-            <option value="summa_cum_laude">Summa Cum Laude</option>
+        <select id="honor" name="honor">
+            <option value="Honorable Mention">Honorable Mention</option>
+            <option value="Cum Laude">Cum Laude</option>
+            <option value="Magna Cum Laude">Magna Cum Laude</option>
+            <option value="Summa Cum Laude">Summa Cum Laude</option>
         </select><br><br>
 
         <input type="submit" value="Submit">
     </form>
 
     <div id="output_ctr">
-        <h3>Remaining Units:</h3> <span id="remaining">{{remaining_units}}</span>
-        <h3>Completed Units:</h3> <span id="completed">{{completed_units}}</span>
-        <h3>IPS Progress:</h3> <span id="completed">{{ips_progress}}%</span>
 
-        {% comment %}
-        <canvas id="ipsProgress"></canvas>
+        <h3>IPS Progress</h3>
+        <strong><span id="progress">{{ ips_progress }}%</span></strong>
+        <p>
+            You're making excellent progress!
+            <span id="completed">{{ completed_units }}</span> units down,
+            <span id="remaining">{{ remaining_units }}</span> more units to go!
+        </p>
 
-        <script>
-            let percent = JSON.parse('{{ percent|safe }}');
-
-            // Creating line chart
-            let c = document.getElementById('ipsProgress').getContext('2d');
-            let ipsProgress = new Chart(c, {
-                type: 'bar',
-                data: {
-                    labels: ['Progress'],
-                    datasets: [{
-                        data: [percent], // Set the initial progress value (e.g., 75%)
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        barPercentage: 0.5
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: false,
-                    scales: {
-                        x: {
-                            display: false,
-                            ticks: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        },
-                        y: {
-                            display: false
-                        },
-                    },
-                },
-            });
-        </script>
+        <h3><span id="honor_chosen">{{ honor }}</span> is ... <br></h3>
+        <strong><span id="eligibility">{{ eligibility_text }}</span></strong>
+        <p>
+            To achieve this,
+            get a minimum QPI of <span id="minimum">{{ minimum_required }}</span>
+            on your remaining <span id="remaining">{{ remaining_units }}</span> units.
+        </p>
+        <p>
+            Highest Attainable: <span id="highest">{{ highest_possible }}</span><br>
+            Honor Range: <span id="honor_min">{{ honor_min }}</span> to <span id="honor_max">{{ honor_max }}</span>
+        </p>
     </div>
-    {% endcomment %}
 
     {% comment %}
     <script>
