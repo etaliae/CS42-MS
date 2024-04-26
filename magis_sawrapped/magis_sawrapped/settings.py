@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django_htmx',
     'dashboard',
     'schedo',
-    'profs_to_pick'
+    'profs_to_pick',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ WSGI_APPLICATION = 'magis_sawrapped.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #        'NAME': os.getenv('DB_NAME'),
@@ -93,7 +94,7 @@ WSGI_APPLICATION = 'magis_sawrapped.wsgi.application'
 #        'HOST': 'magis-sawrapped.cz00m2yyky56.ap-southeast-2.rds.amazonaws.com',
 #        'PORT': '5432',
 #    }
-#}
+# }
 
 DATABASES = {
     'default': {

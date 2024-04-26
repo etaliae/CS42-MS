@@ -22,4 +22,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('', include('login.urls')),
     path('schedo/', include('schedo.urls')),
-] 
+    path('vizprof/', include('profs_to_pick.urls')),
+]

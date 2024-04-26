@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from profs_to_pick.models import Professor
@@ -46,6 +47,9 @@ class Professor(models.Model):
     def __str__(self):
         return '{}, {} {}'.format(self.last_name, self.given_name, self.middle_initial)
 
+    def get_absolute_url(self):
+        return reverse('profs_to_pick:vizprof-detail', kwargs={'pk': self.pk})
+
 
 class SchoolYear(models.Model):
     school_year = models.CharField(max_length=150)
@@ -72,7 +76,8 @@ class SchoolYear(models.Model):
 #     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE)
 
 class Time(models.Model):
-    start_time = models.TimeField(max_length=9, default='00:00:00') # XXXX-XXXX
+    start_time = models.TimeField(
+        max_length=9, default='00:00:00')  # XXXX-XXXX
     end_time = models.TimeField(max_length=9, default='00:00:00')
     day = models.CharField(max_length=10, default='')
     room = models.CharField(max_length=20, default='')
@@ -117,6 +122,8 @@ class Schedule(models.Model):
         return '{}-{}'.format(self.subject.subject_code, self.section)
 
 # Contains the tables that are only accessible to the user with the matching credentials
+
+
 class UserTable(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=50)
@@ -126,6 +133,8 @@ class UserTable(models.Model):
         return '{}: {}'.format(self.user, self.name)
 
 # Contains a list of Schedules
+
+
 class UserSchedule(models.Model):
     table = models.ForeignKey(UserTable, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)

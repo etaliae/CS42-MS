@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}VizProf{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Search for Professors:</h1>
+
+<form method="GET">
+    <input type="text" name="search" placeholder="Search a professor">
+    <button class="btn btn-success" type="submit">Search</button>
+</form>
+
+{% if object_list %}
+<ul>
+    {% for object in object_list %}
+    <li>
+        <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No professors found.</p>
+{% endif %}
+
+{% endblock %}
