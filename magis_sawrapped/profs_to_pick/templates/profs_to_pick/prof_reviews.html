@@ -13,12 +13,13 @@
 
 {% block content %}
 
+<p><a href="{% url 'profs_to_pick:vizprof-search' %}">Back to Search Page</a></p>
+
 <!--Professor Details-->
 <h2>{{ object }}</h2>
 <strong><i>{{ object.department }}</i></strong>
 
 <h3>Student Reviews:</h3>
-
 
 <div id="reviews">
     <table>

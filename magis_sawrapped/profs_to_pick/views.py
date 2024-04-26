@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.db.models import Count
 
 from .models import Review
 from schedo.models import Professor
@@ -25,11 +26,17 @@ class ProfessorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['reviews'] = Review.objects.all()
-        context['positive'] = Review.objects.filter(
-            sentiment__iexact='Positive').count()
-        context['neutral'] = Review.objects.filter(
-            sentiment__iexact='Neutral').count()
-        context['negative'] = Review.objects.filter(
-            sentiment__iexact='Negative').count()
+        sentiment_counts = Review.objects.filter(professor=self.get_object().pk).values(
+            'sentiment').annotate(count=Count('sentiment'))
 
-        return context
+        sentiment = []
+        count = []
+        for sentiment_count in sentiment_counts:
+            sentiment.append(sentiment_count['sentiment'])
+            count.append(sentiment_count['count'])
+
+            context['sentiment_data'] = {
+                'sentiment': sentiment,
+                'count': count,
+            }
+            return context
