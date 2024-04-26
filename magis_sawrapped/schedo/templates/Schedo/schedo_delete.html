@@ -3,7 +3,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Add Table{% endblock %}
+{% block title %}Delete Table{% endblock %}
+{% block content %}
     <form method="post">
         {% csrf_token %}
         <input type="submit" value="Delete Table">

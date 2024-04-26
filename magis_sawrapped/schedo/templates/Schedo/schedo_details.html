@@ -24,12 +24,17 @@
             <button>Edit Schedule</button>
         </a>
     </div>
+    <div>
+        <a href="../delete/">
+            <button>Delete Schedule</button>
+        </a>
+    </div>
 
     {% comment %} Add form method here soon {% endcomment %}
-    <form method="">
+    {% comment %} <form method="post">
         {% csrf_token %}
         <input type="submit" value="Delete Table">
-    </form>
+    </form> {% endcomment %}
 
     <div>
         <a href="../../">Back to List of Schedule Tables</a>

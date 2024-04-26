@@ -67,15 +67,14 @@ class UserTableEdit(UpdateView):
     
 class UserTableDelete(DeleteView):
     model = UserTable
+    success_url = '/schedo/'
     
-    success_url = '../'
-    
-    def form_valid(self, form):
-        pk = self.request.user
-        # form.instance.display_name = form.cleaned_data['name']
-        UserTable.objects.get(pk).delete()
-        return super().form_valid(form)
-    # template_name = 'schedo/schedo_delete.html'
+    # def form_valid(self, form):
+    #     pk = self.request.user
+    #     # form.instance.display_name = form.cleaned_data['name']
+    #     UserTable.objects.get(pk).delete()
+    #     return super().form_valid(form)
+    template_name = 'schedo/schedo_delete.html'
 
 class UserScheduleAdd(CreateView):
     model = UserSchedule
