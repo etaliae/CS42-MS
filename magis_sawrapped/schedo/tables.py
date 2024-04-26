@@ -3,7 +3,7 @@ from .models import UserSchedule, UserTable, Subject
 
 class UScheduleHTMxTable(tables.Table):
     class Meta:
-        model = UserSchedule
+        model = UserTable
         template_name = 'tables/bootstrap_htmx.html'
 
 class CoursesHTMxTable(tables.Table):

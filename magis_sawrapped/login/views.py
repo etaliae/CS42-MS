@@ -32,7 +32,7 @@ def user_register(request):
             user.save() 
             authenticated_user = authenticate(request, username=username, password=password)
             login(request, authenticated_user)
-            return render(request, '../../dashboard/templates/dashboard/dashboard.html') 
+            return render(request, '../../dashboard/templates/dashboard/view_grades.html') 
 
     return render(request, 'register.html')
 
@@ -61,6 +61,7 @@ def user_login(request):
 
         else:
             login(request, user)
+            return render(request, '../../dashboard/templates/dashboard/dashboard.html') 
             return dashboard(request) 
 
     return render(request, 'login.html')

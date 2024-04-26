@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView, UpdateView
+
 
 from django_tables2 import SingleTableMixin
 from django_filters.views import FilterView
@@ -16,8 +20,8 @@ def landing(request):
 
 class UScheduleHTMxTableView(SingleTableMixin, FilterView):
     table_class = UScheduleHTMxTable
-    queryset = UserSchedule.objects.all()
-    model = UserSchedule
+    queryset = UserTable.objects.all()
+    model = UserTable
 
     def get_template_names(self):
         if self.request.htmx:
@@ -38,4 +42,5 @@ class CourseHTMxTableView(SingleTableMixin, FilterView):
         else:
             template_name = "view_courses.html"
 
+        return template_name
         return template_name
