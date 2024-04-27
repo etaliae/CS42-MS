@@ -1,8 +1,9 @@
+
+
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} {{thisTable.name}} {% endblock %}
-
+{% block title %}Delete Table{% endblock %}
 {% block content %}
 <body style = 
     "background: linear-gradient(180deg,  #172554 0%, #1E40AF 100%);
@@ -64,36 +65,10 @@
                 </div>
            </div>
         </nav>
-    <h2>{{thisTable.name}}</h2>
-
-    <div>
-        Here are your schedules
-        <hr/>
-        {% for schedule in userSchedules %}
-            <p>
-                <a href="../../{{schedule.get_absolute_url}}/schedule">
-                    {{schedule}}
-                </a>
-            </p>
-            <hr/>
-        {% endfor %}
-    </div>
-
-    <div>
-        <a href="../edit/">
-            <button>Edit Schedule</button>
-        </a>
-    </div>
-    <div>
-        <a href="../delete/">
-            <button>Delete Table</button>
-        </a>
-    </div>
-
-    {% comment %} Add form method here soon {% endcomment %}
-    {% comment %} <form method="post">
+    <form method="post">
         {% csrf_token %}
         <input type="submit" value="Delete Table">
-    </form> {% endcomment %}
-
+    </form>
+    </div>
+    </body>
 {% endblock %}
